@@ -11,10 +11,18 @@ function fieldFromDablJWT(token:string, fieldName:string):string|null{
   }
 }
 
+/**
+ * Extract the name of the party, as supplied when that Party authenticates themselves with DABL, from a JWT token.
+ * @param token A JWT from DABL.
+ */
 export function partyName(token : string):string|null{
   return fieldFromDablJWT(token, "partyName");
 }
 
+/**
+ * JWT's from DABL expire every 24 hours.
+ * @param token A JWT from DABL.
+ */
 export function expiredToken(token:string):boolean{
   const expInUnixEpoch = fieldFromDablJWT(token, "exp");
   if(expInUnixEpoch === null){

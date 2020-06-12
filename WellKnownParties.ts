@@ -54,11 +54,7 @@ export function WellKnownPartiesProvider({defaultWkp, children}: PropsWithChildr
   if(wellKnownParties === undefined){
     return null;
   } else {
-    return (
-      <WellKnownPartiesContext.Provider value={wellKnownParties}>
-        {children}
-      </WellKnownPartiesContext.Provider>
-    )
+    return React.createElement(WellKnownPartiesContext.Provider, {value:wellKnownParties}, children);
   }
 }
 
