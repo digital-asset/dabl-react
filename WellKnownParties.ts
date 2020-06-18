@@ -1,6 +1,10 @@
 import React, {PropsWithChildren, createContext, useEffect, useState } from "react";
 import {Decoder, object, string } from '@mojotech/json-type-validation'
 
+/**
+ * @param userAdminParty ID of the UserAdmin party on a ledger.
+ * @param publicParty ID of the Public party on a ledger.
+ */
 export type WellKnownParties = {
   userAdminParty : string
   publicParty : string
@@ -38,6 +42,11 @@ type WellKnownPartiesProviderProps = {
   defaultWkp? : WellKnownParties
 }
 
+/**
+ * A React context within which you can use the [[useWellKnowParties]] hook.
+ *
+ * @param defaultWkp An optional [[WellKnownParties]] that will be returned if the fetch fails.
+ */
 export function WellKnownPartiesProvider({defaultWkp, children}: PropsWithChildren<WellKnownPartiesProviderProps>){
   const [wellKnownParties, setWKP] = useState<WellKnownParties | undefined>(defaultWkp);
   useEffect(() => {
@@ -58,6 +67,9 @@ export function WellKnownPartiesProvider({defaultWkp, children}: PropsWithChildr
   }
 }
 
+/**
+ * React hook the Well Known parties.
+ */
 export function useWellKnownParties(){
   var wkp = React.useContext(WellKnownPartiesContext);
   if(wkp === undefined){
