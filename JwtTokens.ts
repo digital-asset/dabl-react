@@ -32,7 +32,7 @@ export function expiredToken(token:string):boolean{
     if(asSeconds === undefined){
       return true;
     } else{
-      return asSeconds <= (new Date()).getTime();
+      return asSeconds <= (new Date()).getTime()/1000;
     }
   }
 }
