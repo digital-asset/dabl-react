@@ -7,7 +7,7 @@ function publicPartyEndPoint(ledgerId:string):string {
 
 async function fetchPublicPartyToken(ledgerId:string) : Promise<string|null> {
   try {
-    const response = await fetch(publicPartyEndPoint(ledgerId), {method:"POST"});
+    const response = await fetch('//' + publicPartyEndPoint(ledgerId), {method:"POST"});
     const json = await response.json();
     console.log(`Fetched public party token ${JSON.stringify(json)}`);
     return 'access_token' in json ? json.access_token : null;
