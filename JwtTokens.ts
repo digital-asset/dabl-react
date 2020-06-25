@@ -4,7 +4,7 @@ import { decode } from "jsonwebtoken";
 function fieldFromDablJWT(token:string, fieldName:string):string|null{
   let decoded = decode(token);
   if(!decoded || typeof(decoded) === "string"){
-    console.log(`JWT not in projectDABL format: ${token}`);
+    console.warn(`JWT not in projectDABL format: ${token}`);
     return null;
   } else {
     return decoded[fieldName];

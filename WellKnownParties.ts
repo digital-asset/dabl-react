@@ -18,7 +18,7 @@ const wellKnownPartiesDecoder: Decoder<WellKnownParties> = object({
 function wellKnownEndPoint() {
   let url = window.location.host;
   if(!url.endsWith('projectdabl.com')){
-    console.log(`Passed url ${url} does not point to projectdabl.com`);
+    console.warn(`Passed url ${url} does not point to projectdabl.com`);
   }
 
   return url + '/.well-known/dabl.json';
@@ -30,7 +30,7 @@ async function fetchWellKnownParties() : Promise<WellKnownParties|null> {
     const dablJson = await response.json();
     return wellKnownPartiesDecoder.runWithException(dablJson)
   } catch(error) {
-    console.log(`Error determining well known parties ${JSON.stringify(error)}`);
+    console.error(`Error determining well known parties ${JSON.stringify(error)}`);
     return null;
   }
 }
@@ -52,7 +52,7 @@ export function WellKnownPartiesProvider({defaultWkp, children}: PropsWithChildr
   useEffect(() => {
     async function res() {
       const wkp = await fetchWellKnownParties();
-      console.log(`The fetched wkp: ${JSON.stringify(wkp)}`);
+      console.log(`The fetched well known parties: ${JSON.stringify(wkp)}`);
       if(wkp !== null){
         setWKP(wkp);
       }

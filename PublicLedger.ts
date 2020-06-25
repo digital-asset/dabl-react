@@ -9,10 +9,10 @@ async function fetchPublicPartyToken(ledgerId:string) : Promise<string|null> {
   try {
     const response = await fetch('//' + publicPartyEndPoint(ledgerId), {method:"POST"});
     const json = await response.json();
-    console.log(`Fetched public party token ${JSON.stringify(json)}`);
+    console.log(`The fetched public party token ${JSON.stringify(json)}`);
     return 'access_token' in json ? json.access_token : null;
   } catch(error) {
-    console.log(`Error fetching public party token ${JSON.stringify(error)}`);
+    console.error(`Error fetching public party token ${JSON.stringify(error)}`);
     return null;
   }
 }
@@ -40,7 +40,6 @@ export function PublicLedger({ledgerId, publicParty, httpBaseUrl, wsBaseUrl, def
     res();
   }, []);
 
-  console.log(`The publicToken is ${publicToken}`);
   if(publicToken === undefined){
     return null;
   } else {
