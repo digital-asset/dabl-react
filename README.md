@@ -27,10 +27,24 @@ observe common information for your application.
 // Within a
 <WellKnownPartiesProvider>
   ...
-  // This hook will this object from DABL.
+  // This hook will provide this data from DABL.
   let wkp : WellKnownParites = useWellKnownParties();
 
 </WellKnownPartiesProvider>
+```
+
+### Pubic Party
+
+One of the Well Known parties, is the **Public** party that can be used to disclose information via contracts to all participants.
+```typescript
+// Within a
+<PublicLedger ledgerId={ledgerId}>
+  ...
+  // The standard hooks provided by @daml/react have an analog "AsPublic" method.
+  // Eg. instead of useStreamQuery one can write:
+  var contracts = useStreamQueryAsPublic(Contract);
+
+</PublicLedger>
 ```
 
 ### Information within the JWT.
