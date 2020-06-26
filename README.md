@@ -54,8 +54,3 @@ let usersPartyName = partyName(token);
 let needToResetLogin = expiredToken(token);
 ```
 
-## Source
-TODO
-
-## License
-TODO
