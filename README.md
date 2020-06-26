@@ -33,7 +33,7 @@ observe common information for your application.
 </WellKnownPartiesProvider>
 ```
 
-### Pubic Party
+### Public Party
 
 One of the Well Known parties, is the **Public** party that can be used to disclose information via contracts to all participants.
 ```typescript
