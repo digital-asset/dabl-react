@@ -2,8 +2,8 @@
   "compilerOptions": {
     "target": "es5",
     "lib": [
-      "es6",
-      "dom"
+      "DOM",
+      "es2015"
      ],
     "jsx": "react",
     "strict": true,
@@ -16,5 +16,11 @@
     "module": "CommonJS",
     "declaration": true,
     "sourceMap": true
-  }
+  },
+  "files": [
+    "index.ts",
+    "JwtTokens",
+    "PublicLedger.ts",
+    "WellKnownParties.ts"
+  ]
 }
