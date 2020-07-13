@@ -10,7 +10,7 @@ import { renderHook, RenderHookResult } from '@testing-library/react-hooks';
 import { PublicLedger, usePartyAsPublic, useLedgerAsPublic, useQueryAsPublic } from './index';
 
 const TEST_LEDGER_ID ='test-ledger-id'
-const PUBLIC_PARTY ='PUBLIC'
+const PUBLIC_PARTY ='Public'
 const PUBLIC_TOKEN = sign({ "https://daml.com/ledger-api": { ledgerId:TEST_LEDGER_ID, admin: true, actAs: [PUBLIC_PARTY], readAs: [PUBLIC_PARTY] } }, "secret")
 
 console.log(`The PUBLIC_TOKEN is ${PUBLIC_TOKEN}`);
@@ -49,7 +49,7 @@ test('useLedgerAsPublic', async () => {
   expect(result.current).toEqual(null);
   await waitForValueToChange(() => result.current);
   expect(result.current).toHaveProperty('token');
-  expect(result.current).toBeInstanceOf(Ledger);
+  expect(result.current).toBe('Ledger');
 })
 
 const Foo = {templateId: 'FooTemplateId'} as unknown as Template<object>;
