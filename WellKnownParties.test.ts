@@ -2,6 +2,8 @@
 // Copyright (c) 2020 Digital Asset (Switzerland) GmbH and/or its affiliates. All rights reserved.
 // SPDX-License-Identifier: Apache-2.0
 
+import { enableFetchMocks } from 'jest-fetch-mock';
+enableFetchMocks()
 import fetchMock from 'jest-fetch-mock';
 import React, { ComponentType } from 'react';
 import { renderHook } from '@testing-library/react-hooks';
