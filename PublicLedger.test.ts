@@ -3,7 +3,6 @@
 
 import fetchMock from 'jest-fetch-mock';
 import { Template } from '@daml/types';
-import Ledger from '@daml/ledger';
 import React, { ComponentType } from 'react';
 import { sign } from 'jsonwebtoken';
 import { renderHook, RenderHookResult } from '@testing-library/react-hooks';
@@ -49,7 +48,6 @@ test('useLedgerAsPublic', async () => {
   expect(result.current).toEqual(null);
   await waitForValueToChange(() => result.current);
   expect(result.current).toHaveProperty('token');
-  expect(result.current).toBe('Ledger');
 })
 
 const Foo = {templateId: 'FooTemplateId'} as unknown as Template<object>;
