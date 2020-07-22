@@ -2,9 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 module.exports = {
-  setupFiles: [
-    "./setupJest.js"
-  ],
   testEnvironment: "jsdom",
   testMatch: [
     "**/__tests__/**/*.+(ts|tsx|js)",
