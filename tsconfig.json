@@ -19,7 +19,7 @@
   },
   "files": [
     "index.ts",
-    "JwtTokens",
+    "JwtTokens.ts",
     "PublicLedger.ts",
     "WellKnownParties.ts"
   ]
