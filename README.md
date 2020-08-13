@@ -2,6 +2,8 @@
 
 > React functions for DAML applications running on [projectDABL](https://projectdabl.com/).
 
+Copyright 2020 Digital Asset (Switzerland) GmbH and/or its affiliates. All Rights Reserved. SPDX-License-Identifier: Apache-2.0
+
 ## Documentation
 
 This library aims to complement [@daml/react](`https://www.npmjs.com/package/@daml/react),
