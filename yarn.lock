@@ -279,31 +279,31 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@daml/ledger@1.3.0", "@daml/ledger@^1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@daml/ledger/-/ledger-1.3.0.tgz#ff42e360a35c88fd9e0743508adddd67e2cdea5f"
-  integrity sha512-+aOB/qpbOfbC+MrbxeRlM6qU0d3RFiEqBbSvG6FSa0CvOf8c/64cO/GRk7bu93YoZTwN7Z8eHIxv9n14/7lBkg==
+"@daml/ledger@1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@daml/ledger/-/ledger-1.4.0.tgz#730879b7e810cf7e90fb4087331ad3b5e37c11df"
+  integrity sha512-+KXL6aDW7+rvGV13GycPmd4cdu8H8/efMZcqVmhkMOi2Nh05aVi590TaT7MNLcGRjlS4mxycrGVt1xe+/mM4eA==
   dependencies:
-    "@daml/types" "1.3.0"
+    "@daml/types" "1.4.0"
     "@mojotech/json-type-validation" "^3.1.0"
     cross-fetch "^3.0.4"
     events "^3.1.0"
     isomorphic-ws "^4.0.1"
     ws "^7.2.1"
 
-"@daml/react@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@daml/react/-/react-1.3.0.tgz#e1508bf608ce8fa0955cd67d72ed8dab62dce2d8"
-  integrity sha512-WOtbVMcj4LERbnU7k0S00v0MFo8ynqro1gjMYSDw/aXqh1iUo02HW/IfZeVhmh+0IPim1D6smnxRSz70KSA0oQ==
+"@daml/react@1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@daml/react/-/react-1.4.0.tgz#1050804b1e063d90886fd49f0d44f19de4c406ed"
+  integrity sha512-kVh0RFJA+CHdmnKwWh7wXa/Bz11MaX7dL0dLZsQfNvvAYm4J8CJbzHom/nMxmou+criMGWB4nYbh6RMSU/1vFQ==
   dependencies:
-    "@daml/ledger" "1.3.0"
-    "@daml/types" "1.3.0"
+    "@daml/ledger" "1.4.0"
+    "@daml/types" "1.4.0"
     react "^16.12.0"
 
-"@daml/types@1.3.0":
-  version "1.3.0"
-  resolved "https://registry.yarnpkg.com/@daml/types/-/types-1.3.0.tgz#8c45c7ba2d23ae0298e79c361bb1873cb3f9ac2f"
-  integrity sha512-D1pWjsNIFHFySArwZi4jRqmey9FV3g6aOY1n8b95q+j5k7wlnsocsGYeIVImMjKoZS+yKIGDEUBEts/mB56yyA==
+"@daml/types@1.4.0":
+  version "1.4.0"
+  resolved "https://registry.yarnpkg.com/@daml/types/-/types-1.4.0.tgz#6c129cdcf9408ab5204ba04cc30ddcb807acfa52"
+  integrity sha512-31X10C0qe17VOGXnp1HKjMsQYPnWcZkOOE/jDhSF0hh5heFINCkrCWX2i03mZk7LKYh7zSnPX8edOU5EPUXMng==
   dependencies:
     "@mojotech/json-type-validation" "^3.1.0"
 
