@@ -1,5 +1,7 @@
 import { createElement, PropsWithChildren, useEffect, useState } from 'react';
-import { createLedgerContext, LedgerContext } from '@daml/react';
+import { Party, Template } from '@daml/types';
+import Ledger, {Query} from '@daml/ledger';
+import { createLedgerContext, FetchResult, QueryResult } from '@daml/react';
 
 function publicPartyEndPoint(ledgerId:string):string {
   return `api.projectdabl.com/api/ledger/${ledgerId}/public/token`;
@@ -46,11 +48,27 @@ export function PublicLedger({ledgerId, publicParty, httpBaseUrl, wsBaseUrl, def
   }
 }
 
-export const usePartyAsPublic = useParty
-//  This format is necessary to correctly assign the type.
-export const useLedgerAsPublic : LedgerContext["useLedger"] = useLedger
-export const useQueryAsPublic : LedgerContext["useQuery"] = useQuery
-export const useFetchByKeyAsPublic : LedgerContext["useFetchByKey"] = useFetchByKey
-export const useStreamQueryAsPublic : LedgerContext["useStreamQuery"]= useStreamQuery
-export const useStreamFetchByKeyAsPublic : LedgerContext["useStreamFetchByKey"]= useStreamFetchByKey
+export const usePartyAsPublic : () => Party = useParty
+export const useLedgerAsPublic : () => Ledger =  useLedger
+
+export function useQueryAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>, queryFactory: () => Query<T>, queryDeps: readonly unknown[]): QueryResult<T, K, I>
+export function useQueryAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>): QueryResult<T, K, I>
+export function useQueryAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>, queryFactory?: () => Query<T>, queryDeps?: readonly unknown[]): QueryResult<T, K, I> {
+  return useQuery(template, queryFactory, queryDeps);
+}
+
+export function useFetchByKeyAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>, keyFactory: () => K, keyDeps: readonly unknown[]): FetchResult<T, K, I> {
+  return useFetchByKey(template, keyFactory, keyDeps);
+}
+
+export function useStreamQueryAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>, queryFactory: () => Query<T>, queryDeps: readonly unknown[]): QueryResult<T, K, I>
+export function useStreamQueryAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>): QueryResult<T, K, I>
+export function useStreamQueryAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>, queryFactory?: () => Query<T>, queryDeps?: readonly unknown[]): QueryResult<T, K, I> {
+  return useStreamQuery(template, queryFactory, queryDeps);
+}
+
+export function useStreamFetchByKeyAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>, keyFactory: () => K, keyDeps: readonly unknown[]): FetchResult<T, K, I> {
+  return useStreamFetchByKey(template, keyFactory, keyDeps);
+}
+
 export const useReloadAsPublic = useReload
