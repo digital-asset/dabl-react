@@ -10,6 +10,18 @@ This library aims to complement [@daml/react](`https://www.npmjs.com/package/@da
 to make it easier to write [React](https://reactjs.org/) applications on DABL specifically.
 To that end we provide for convenience.
 
+## Install
+
+```
+yarn add digital-asset/dabl-react
+```
+
+or
+
+```
+npm install digital-asset/dabl-react
+```
+
 ## Usage
 
 ### Well Known End point
@@ -47,4 +59,3 @@ One of the Well Known parties, is the **Public** party that can be used to discl
 let usersPartyName = partyName(token);
 let needToResetLogin = expiredToken(token);
 ```
-
