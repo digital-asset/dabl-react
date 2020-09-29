@@ -13,19 +13,19 @@ beforeEach(() => {
   fetchMock.resetMocks()
 });
 
-const testWellKnownParties = { userAdminParty: 'UserAdmin'
-                             , publicParty: 'Public'
-                             };
+const testWellKnownParties = {
+  userAdminParty: 'UserAdmin',
+  publicParty: 'Public'
+};
 
 test('WellKnownPartiesProvider', async () => {
 
   fetchMock.mockResponse(JSON.stringify(testWellKnownParties));
-  const defaultWkp = { userAdminParty: 'Foo', publicParty:'Bar' };
+  const defaultWkp = { userAdminParty: 'Foo', publicParty: 'Bar' };
   const wrapper: ComponentType = ({children}) => React.createElement(WellKnownPartiesProvider, {defaultWkp}, children);
   const {result, waitForValueToChange} = renderHook(() => { return useWellKnownParties(); }, {wrapper});
   expect(fetchMock.mock.calls.length).toEqual(1);
-  expect(result.current).toEqual(defaultWkp);
+  expect(result.current).toEqual({ parties: defaultWkp, loading: true, error: null });
   await waitForValueToChange(() => result.current);
-  expect(result.current).toEqual(testWellKnownParties);
+  expect(result.current).toEqual({ parties: testWellKnownParties, loading: false, error: null });
 });
-

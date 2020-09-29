@@ -5,12 +5,23 @@ import {Decoder, object, string } from '@mojotech/json-type-validation'
  * @param userAdminParty ID of the UserAdmin party on a ledger.
  * @param publicParty ID of the Public party on a ledger.
  */
-export type WellKnownParties = {
-  userAdminParty : string
-  publicParty : string
+export type Parties = {
+  userAdminParty: string;
+  publicParty: string;
 }
 
-const wellKnownPartiesDecoder: Decoder<WellKnownParties> = object({
+/**
+ * @param parties The party IDs returned by a successful response.
+ * @param loading The current status of the response.
+ * @param error The error returned by a failed response.
+ */
+export type WellKnownParties = {
+  parties: Parties | null;
+  loading: boolean;
+  error: string | null;
+}
+
+const wellKnownPartiesDecoder: Decoder<Parties> = object({
   userAdminParty: string(),
   publicParty: string(),
 })
@@ -24,14 +35,15 @@ function wellKnownEndPoint() {
   return url + '/.well-known/dabl.json';
 }
 
-async function fetchWellKnownParties() : Promise<WellKnownParties|null> {
+async function fetchWellKnownParties() : Promise<WellKnownParties> {
   try {
     const response = await fetch('//' + wellKnownEndPoint());
     const dablJson = await response.json();
-    return wellKnownPartiesDecoder.runWithException(dablJson)
+    const parties = wellKnownPartiesDecoder.runWithException(dablJson);
+    return { parties, loading: false, error: null }
   } catch(error) {
     console.error(`Error determining well known parties ${JSON.stringify(error)}`);
-    return null;
+    return { parties: null, loading: false, error }
   }
 }
 
@@ -39,7 +51,7 @@ async function fetchWellKnownParties() : Promise<WellKnownParties|null> {
 const WellKnownPartiesContext = createContext<WellKnownParties | undefined>(undefined);
 
 type WellKnownPartiesProviderProps = {
-  defaultWkp? : WellKnownParties
+  defaultWkp? : Parties
 }
 
 /**
@@ -48,14 +60,22 @@ type WellKnownPartiesProviderProps = {
  * @param defaultWkp An optional [[WellKnownParties]] that will be returned if the fetch fails.
  */
 export function WellKnownPartiesProvider({defaultWkp, children}: PropsWithChildren<WellKnownPartiesProviderProps>){
-  const [wellKnownParties, setWKP] = useState<WellKnownParties | undefined>(defaultWkp);
+  const [wellKnownParties, setWKP] = useState<WellKnownParties | undefined>({
+    parties: defaultWkp || null,
+    loading: false,
+    error: null
+  });
+
   useEffect(() => {
     async function res() {
+      setWKP({
+        parties: wellKnownParties?.parties || null,
+        loading: true,
+        error: null
+      });
       const wkp = await fetchWellKnownParties();
       console.log(`The fetched well known parties: ${JSON.stringify(wkp)}`);
-      if(wkp !== null){
-        setWKP(wkp);
-      }
+      setWKP(wkp);
     };
     res();
   },[]);
