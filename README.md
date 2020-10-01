@@ -21,8 +21,8 @@ observe common information for your application.
 // Within a
 <WellKnownPartiesProvider>
   ...
-  // This hook will provide this data from DABL.
-  let wkp : WellKnownParites = useWellKnownParties();
+  // This hook will provide well known parties from DABL, as well as status information regarding the request.
+  let { parties, loading, error } = useWellKnownParties();
 
 </WellKnownPartiesProvider>
 ```
@@ -47,4 +47,3 @@ One of the Well Known parties, is the **Public** party that can be used to discl
 let usersPartyName = partyName(token);
 let needToResetLogin = expiredToken(token);
 ```
-

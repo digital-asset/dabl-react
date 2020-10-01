@@ -62,7 +62,7 @@ type WellKnownPartiesProviderProps = {
 export function WellKnownPartiesProvider({defaultWkp, children}: PropsWithChildren<WellKnownPartiesProviderProps>){
   const [wellKnownParties, setWKP] = useState<WellKnownParties | undefined>({
     parties: defaultWkp || null,
-    loading: false,
+    loading: true,
     error: null
   });
 
