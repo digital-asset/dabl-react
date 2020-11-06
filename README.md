@@ -47,3 +47,10 @@ One of the Well Known parties, is the **Public** party that can be used to discl
 let usersPartyName = partyName(token);
 let needToResetLogin = expiredToken(token);
 ```
+
+## Using
+
+At the current moment, this library is *not* deployed to npm. To use:
+
+1. `make build`
+2. Then `yarn link file:path-to-generated-lib-directory` in your project.
