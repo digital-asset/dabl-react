@@ -14,7 +14,7 @@ To that end we provide for convenience.
 
 ### Well Known End point
 
-DABL provides an `.well-known` endpoint ([see](https://docs.projectdabl.com/api/onboarding/#listening-for-new-users)), that provides the identity of Party's who can run automation or
+DABL provides an `.well-known` endpoint ([see](https://docs.projectdabl.com/api/iam/#listening-for-new-users)), that provides the identity of Party's who can run automation or
 observe common information for your application.
 
 ```typescript
