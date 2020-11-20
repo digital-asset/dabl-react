@@ -3,13 +3,14 @@ import { Party, Template } from '@daml/types';
 import Ledger, {Query, StreamCloseEvent} from '@daml/ledger';
 import { createLedgerContext, FetchByKeysResult, FetchResult, QueryResult } from '@daml/react';
 
-function publicPartyEndPoint(ledgerId:string):string {
-  return `api.projectdabl.com/api/ledger/${ledgerId}/public/token`;
+function publicPartyEndPoint(ledgerId: string, hostname: string):string {
+  return `${hostname}/api/ledger/${ledgerId}/public/token`;
 }
 
-async function fetchPublicPartyToken(ledgerId:string) : Promise<string|null> {
+async function fetchPublicPartyToken(ledgerId: string, httpBaseUrl?: string) : Promise<string|null> {
   try {
-    const response = await fetch('//' + publicPartyEndPoint(ledgerId), {method:"POST"});
+    const { hostname } = new URL(httpBaseUrl || 'https://api.projectdabl.com');
+    const response = await fetch('//' + publicPartyEndPoint(ledgerId, hostname), {method:"POST"});
     const json = await response.json();
     return 'access_token' in json ? json.access_token : null;
   } catch(error) {
@@ -23,8 +24,8 @@ const { DamlLedger, useParty, useLedger, useQuery, useFetchByKey, useStreamQuery
 type PublicProp = {
   ledgerId : string,
   publicParty : string,
-  httpBaseUrl? : string
-  wsBaseUrl? : string
+  httpBaseUrl? : string,
+  wsBaseUrl? : string,
   defaultToken? : string
 }
 
@@ -32,7 +33,7 @@ export function PublicLedger({ledgerId, publicParty, httpBaseUrl, wsBaseUrl, def
   const [publicToken, setPublicToken] = useState<string|undefined>(defaultToken);
   useEffect(() => {
     async function res() {
-      const pt = await fetchPublicPartyToken(ledgerId);
+      const pt = await fetchPublicPartyToken(ledgerId, httpBaseUrl);
       console.log(`The fetched publicToken ${JSON.stringify(pt)}`);
       if(pt !== null){
         setPublicToken(pt);
