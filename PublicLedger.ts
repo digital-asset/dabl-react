@@ -26,10 +26,11 @@ type PublicProp = {
   publicParty : string,
   httpBaseUrl? : string,
   wsBaseUrl? : string,
-  defaultToken? : string
+  defaultToken? : string,
+  reconnectThreshold? : number,
 }
 
-export function PublicLedger({ledgerId, publicParty, httpBaseUrl, wsBaseUrl, defaultToken, children} : PropsWithChildren<PublicProp>) {
+export function PublicLedger({ledgerId, publicParty, httpBaseUrl, wsBaseUrl, defaultToken, reconnectThreshold, children} : PropsWithChildren<PublicProp>) {
   const [publicToken, setPublicToken] = useState<string|undefined>(defaultToken);
   useEffect(() => {
     async function res() {
@@ -45,7 +46,7 @@ export function PublicLedger({ledgerId, publicParty, httpBaseUrl, wsBaseUrl, def
   if(publicToken === undefined){
     return null;
   } else {
-    return createElement(DamlLedger, {party:publicParty, token:publicToken, httpBaseUrl, wsBaseUrl}, children);
+    return createElement(DamlLedger, {party:publicParty, token:publicToken, httpBaseUrl, wsBaseUrl, reconnectThreshold}, children);
   }
 }
 
@@ -84,7 +85,7 @@ export function useStreamQueryAsPublic<T extends object, K, I extends string>(te
   return useStreamQuery(template, queryFactory, queryDeps, closeHandler);
 }
 
-export function useStreamQueriesAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>, queryFactory: () => Query<T>, queryDeps: readonly unknown[], closeHandler: (e: StreamCloseEvent) => void): QueryResult<T, K, I>
+export function useStreamQueriesAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>, queryFactory: () => Query<T>[], queryDeps: readonly unknown[], closeHandler: (e: StreamCloseEvent) => void): QueryResult<T, K, I>
 export function useStreamQueriesAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>): QueryResult<T, K, I>
 export function useStreamQueriesAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>, queryFactory?: () => Query<T>[], queryDeps?: readonly unknown[], closeHandler?: (e: StreamCloseEvent) => void): QueryResult<T, K, I> {
   return useStreamQueries(template, queryFactory, queryDeps, closeHandler);
