@@ -1,10 +1,15 @@
 version: 2.1
 orbs:
   node: circleci/node@3.0.0
-jobs:
-  test:
+
+defaults: &defaults
+  working_directory: ~/hub-react
     executor:
       name: node/default
+
+jobs:
+  test:
+    << : *defaults
     steps:
       - checkout
       - node/install-packages:
@@ -12,22 +17,26 @@ jobs:
       - run:
           command: yarn test
           name: Run tests via yarn
+      - persist_to_workspace:
+        root: ~/hub-react
+        paths: .
 
   build:
-    executor:
-      name: node/default
+    << : *defaults
     steps:
       - run:
           command: yarn build
           name: Build ts to lib/ via yarn
+      - persist_to_workspace:
+        root: ~/hub-react
+        paths: .
 
   deploy:
-    executor:
-      name: node/default
+    << : *defaults
     steps:
       - run:
           name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/repo/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/hub-react/.npmrc
       - run:
           name: Publish package
           command: npm publish --dry-run
@@ -40,4 +49,4 @@ workflows:
 
   test_deploy:
     jobs:
-      - deploy
+      - build
