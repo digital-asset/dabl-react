@@ -29,7 +29,7 @@ jobs:
           name: Compile TS to JS
       - run:
           name: Authenticate with registry
-          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/hub-react/.npmrc
+          command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > .npmrc
       - run:
           name: Publish package
           command: npm publish --dry-run
@@ -37,7 +37,10 @@ jobs:
 workflows:
   test_my_app:
     jobs:
-      - test
+      - test:
+          filters:
+            tags:
+              ignore: /^v.*/
 
   publish:
     jobs:
