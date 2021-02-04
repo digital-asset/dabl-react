@@ -63,4 +63,3 @@ test('useQueryAsPublic', () => {
   //await waitForValueToChange(() => result.current);
   //expect(result.current).toStrictEqual({contracts:[],loading:true});
 });
-
