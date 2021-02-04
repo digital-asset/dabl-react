@@ -14,12 +14,16 @@ jobs:
           name: Run tests via yarn
 
   build:
+    executor:
+      name: node/default
     steps:
       - run:
           command: yarn build
           name: Build ts to lib/ via yarn
 
   deploy:
+    executor:
+      name: node/default
     steps:
       - run:
           name: Authenticate with registry
