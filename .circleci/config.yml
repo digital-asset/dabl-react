@@ -7,8 +7,10 @@ defaults: &defaults
   executor:
     name: node/default
 
-test_steps: &test_steps
-  steps:
+commands: # a reusable command with parameters
+  test_steps:
+    parameters:
+    steps:
       - checkout
       - node/install-packages:
           app-dir: ~/hub-react
@@ -23,12 +25,13 @@ test_steps: &test_steps
 jobs:
   test:
     << : *defaults
-    << : *test_steps
+    steps:
+      - test_steps
 
   build_and_deploy:
     << : *defaults
-    << : *test_steps
     steps:
+      - test_steps
       - run:
           command: yarn build
           name: Compile TS to JS
