@@ -2,34 +2,26 @@ version: 2.1
 orbs:
   node: circleci/node@3.0.0
 
-defaults: &defaults
-  working_directory: ~/hub-react
-  executor:
-    name: node/default
-
-commands: # a reusable command with parameters
+commands:
   test_steps:
-    parameters:
     steps:
       - checkout
       - node/install-packages:
-          app-dir: ~/hub-react
           pkg-manager: yarn
       - run:
           command: yarn test
           name: Run tests via yarn
-      - persist_to_workspace:
-          root: ~/hub-react
-          paths: .
 
 jobs:
   test:
-    << : *defaults
+    executor:
+      name: node/default
     steps:
       - test_steps
 
-  build_and_deploy:
-    << : *defaults
+  test_build_and_publish:
+    executor:
+      name: node/default
     steps:
       - test_steps
       - run:
@@ -42,12 +34,16 @@ jobs:
           name: Publish package
           command: npm publish --dry-run
 
-
 workflows:
   test_my_app:
     jobs:
       - test
 
-  test_deploy:
+  publish:
     jobs:
-      - build_and_deploy
+      - test_build_and_publish:
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/
