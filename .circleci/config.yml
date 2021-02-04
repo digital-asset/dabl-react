@@ -29,7 +29,7 @@ jobs:
           at: ~/hub-react
       - run:
           command: yarn build
-          name: Build ts to lib/ via yarn
+          name: Compile TS to JS
       - persist_to_workspace:
           root: ~/hub-react
           paths: .
@@ -54,4 +54,5 @@ workflows:
 
   test_deploy:
     jobs:
+      - test
       - build
