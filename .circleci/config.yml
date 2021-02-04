@@ -13,6 +13,7 @@ jobs:
     steps:
       - checkout
       - node/install-packages:
+          app-dir: ~/hub-react
           pkg-manager: yarn
       - run:
           command: yarn test
@@ -24,6 +25,8 @@ jobs:
   build:
     << : *defaults
     steps:
+      - attach_workspace:
+          at: ~/hub-react
       - run:
           command: yarn build
           name: Build ts to lib/ via yarn
@@ -34,6 +37,8 @@ jobs:
   deploy:
     << : *defaults
     steps:
+      - attach_workspace:
+          at: ~/hub-react
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$npm_TOKEN" > ~/hub-react/.npmrc
