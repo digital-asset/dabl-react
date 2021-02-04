@@ -4,8 +4,8 @@ orbs:
 
 defaults: &defaults
   working_directory: ~/hub-react
-    executor:
-      name: node/default
+  executor:
+    name: node/default
 
 jobs:
   test:
