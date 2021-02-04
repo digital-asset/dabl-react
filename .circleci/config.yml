@@ -18,8 +18,8 @@ jobs:
           command: yarn test
           name: Run tests via yarn
       - persist_to_workspace:
-        root: ~/hub-react
-        paths: .
+          root: ~/hub-react
+          paths: .
 
   build:
     << : *defaults
@@ -28,8 +28,8 @@ jobs:
           command: yarn build
           name: Build ts to lib/ via yarn
       - persist_to_workspace:
-        root: ~/hub-react
-        paths: .
+          root: ~/hub-react
+          paths: .
 
   deploy:
     << : *defaults
