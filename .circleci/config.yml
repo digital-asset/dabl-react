@@ -1,10 +1,9 @@
 version: 2.1
 orbs:
   node: circleci/node@3.0.0
-jobs:
-  test:
-    executor:
-      name: node/default
+
+commands:
+  test_steps:
     steps:
       - checkout
       - node/install-packages:
@@ -13,7 +12,43 @@ jobs:
           command: yarn test
           name: Run tests via yarn
 
+jobs:
+  test:
+    executor:
+      name: node/default
+    steps:
+      - test_steps
+
+  test_build_and_publish:
+    executor:
+      name: node/default
+    steps:
+      - test_steps
+      - run:
+          command: yarn build
+          name: Compile TS to JS
+      - run:
+          name: Authenticate with registry
+          command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
+      - run:
+          name: Publish package
+          command: npm publish --access public
+
 workflows:
   test_my_app:
     jobs:
-      - test
+      - test:
+          filters:
+            tags:
+              ignore: /^v.*/
+
+  publish:
+    jobs:
+      - test_build_and_publish:
+          context:
+            - npm-automation
+          filters:
+            tags:
+              only: /^v.*/
+            branches:
+              ignore: /.*/

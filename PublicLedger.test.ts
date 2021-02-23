@@ -29,7 +29,7 @@ test('PublicLedger', async () => {
   fetchMock.mockResponse(JSON.stringify({access_token:PUBLIC_TOKEN}));
   const {result, waitForValueToChange} = renderPublicLedgerHook(() => { return 'we-have-a-token'; });
   expect(fetchMock.mock.calls.length).toEqual(1);
-  expect(result.current).toEqual(null);
+  expect(result.current).toEqual(undefined);
   await waitForValueToChange(() => result.current);
   expect(result.current).toEqual('we-have-a-token');
 });
@@ -38,7 +38,7 @@ test('usePartyAsPublic', async () => {
   fetchMock.mockResponse(JSON.stringify({access_token:PUBLIC_TOKEN}));
   const {result, waitForValueToChange} = renderPublicLedgerHook(() => { return usePartyAsPublic(); });
   expect(fetchMock.mock.calls.length).toEqual(1);
-  expect(result.current).toEqual(null);
+  expect(result.current).toEqual(undefined);
   await waitForValueToChange(() => result.current);
   expect(result.current).toEqual(PUBLIC_PARTY);
 })
@@ -47,7 +47,7 @@ test('useLedgerAsPublic', async () => {
   fetchMock.mockResponse(JSON.stringify({access_token:PUBLIC_TOKEN}));
   const {result, waitForValueToChange} = renderPublicLedgerHook(() => { return useLedgerAsPublic(); });
   expect(fetchMock.mock.calls.length).toEqual(1);
-  expect(result.current).toEqual(null);
+  expect(result.current).toEqual(undefined);
   await waitForValueToChange(() => result.current);
   expect(result.current).toHaveProperty('token');
 })
@@ -58,9 +58,8 @@ test('useQueryAsPublic', () => {
   fetchMock.mockResponse(JSON.stringify({access_token:PUBLIC_TOKEN}));
   const {result} = renderPublicLedgerHook(() => { return useQueryAsPublic(Foo); });
   expect(fetchMock.mock.calls.length).toEqual(1);
-  expect(result.current).toEqual(null);
+  expect(result.current).toEqual(undefined);
   // TODO. Currently fails because of async time out.
   //await waitForValueToChange(() => result.current);
   //expect(result.current).toStrictEqual({contracts:[],loading:true});
 });
-
