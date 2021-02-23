@@ -1,6 +1,6 @@
 {
   "name": "@daml/hub-react",
-  "version": "1.0.0",
+  "version": "0.1.0-rc.1",
   "description": "Daml React functions for Daml Hub.",
   "homepage": "https://projectdabl.com",
   "keywords": [
