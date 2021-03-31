@@ -1,6 +1,6 @@
 {
   "name": "@daml/hub-react",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Daml React functions for Daml Hub.",
   "homepage": "https://projectdabl.com",
   "keywords": [
@@ -18,8 +18,8 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@daml/react": "1.9.0",
-    "@daml/ledger": "1.9.0",
+    "@daml/react": "1.11.1",
+    "@daml/ledger": "1.11.1",
     "@mojotech/json-type-validation": "^3.1.0",
     "jsonwebtoken": "^8.5.1",
     "react": "^16.12.0"
@@ -32,7 +32,7 @@
     "lint": "eslint --ext .ts --ignore-pattern lib/ --max-warnings 0 ./"
   },
   "devDependencies": {
-    "@daml/types": "1.9.0",
+    "@daml/types": "1.11.1",
     "@testing-library/react-hooks": "^5.0.3",
     "@types/jest": "^24.0.23",
     "@types/jsonwebtoken": "^8.5.0",
