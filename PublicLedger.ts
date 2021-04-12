@@ -79,14 +79,10 @@ export function useFetchByKeyAsPublic<T extends object, K, I extends string>(tem
  *
  * @return The matching contracts.
  */
-export function useStreamQueryAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>, queryFactory: () => Query<T>, queryDeps: readonly unknown[], closeHandler: (e: StreamCloseEvent) => void): QueryResult<T, K, I>
-export function useStreamQueryAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>): QueryResult<T, K, I>
 export function useStreamQueryAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>, queryFactory?: () => Query<T>, queryDeps?: readonly unknown[], closeHandler?: (e: StreamCloseEvent) => void): QueryResult<T, K, I> {
   return useStreamQuery(template, queryFactory, queryDeps, closeHandler);
 }
 
-export function useStreamQueriesAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>, queryFactory: () => Query<T>[], queryDeps: readonly unknown[], closeHandler: (e: StreamCloseEvent) => void): QueryResult<T, K, I>
-export function useStreamQueriesAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>): QueryResult<T, K, I>
 export function useStreamQueriesAsPublic<T extends object, K, I extends string>(template: Template<T, K, I>, queryFactory?: () => Query<T>[], queryDeps?: readonly unknown[], closeHandler?: (e: StreamCloseEvent) => void): QueryResult<T, K, I> {
   return useStreamQueries(template, queryFactory, queryDeps, closeHandler);
 }
