@@ -11,6 +11,9 @@ commands:
       - run:
           command: yarn test
           name: Run tests via yarn
+      - run:
+          command: yarn format-check
+          name: Check formatting
 
 jobs:
   test:

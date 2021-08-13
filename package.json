@@ -18,8 +18,8 @@
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@daml/react": "1.12.0",
     "@daml/ledger": "1.12.0",
+    "@daml/react": "1.12.0",
     "@mojotech/json-type-validation": "^3.1.0",
     "jsonwebtoken": "^8.5.1",
     "react": "^16.12.0"
@@ -29,6 +29,8 @@
     "build": "tsc --build",
     "build:watch": "tsc --build --watch",
     "test": "jest",
+    "format": "prettier --write .",
+    "format-check": "prettier --check .",
     "lint": "eslint --ext .ts --ignore-pattern lib/ --max-warnings 0 ./"
   },
   "devDependencies": {
@@ -43,6 +45,7 @@
     "eslint": "^6.8.0",
     "jest": "^26.1.0",
     "jest-fetch-mock": "^3.0.3",
+    "prettier": "^2.3.2",
     "react-test-renderer": "^16.12.0",
     "ts-jest": "^26.1.1",
     "typescript": "~3.8.3"
@@ -60,5 +63,10 @@
       "^.+\\.(ts|tsx)$": "ts-jest",
       "^.+\\.(js|jsx)$": "babel-jest"
     }
+  },
+  "prettier": {
+    "printWidth": 100,
+    "singleQuote": true,
+    "arrowParens": "avoid"
   }
 }
