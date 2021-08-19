@@ -2,14 +2,3 @@
 .vscode
 lib
 node_modules
-
-DablPartiesInput.test.ts
-DablPartiesInput.tsx
-JwtTokens.test.ts
-JwtTokens.ts
-PublicLedger.test.ts
-PublicLedger.ts
-README.md
-WellKnownParties.test.ts
-WellKnownParties.ts
-tsconfig.json

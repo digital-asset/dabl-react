@@ -1,8 +1,8 @@
 {
   "name": "@daml/hub-react",
-  "version": "0.3.0",
+  "version": "1.0.0-rc.1",
   "description": "Daml React functions for Daml Hub.",
-  "homepage": "https://projectdabl.com",
+  "homepage": "https://hub.daml.com",
   "keywords": [
     "dabl",
     "daml hub",
@@ -12,29 +12,28 @@
     "API"
   ],
   "main": "lib/index.js",
-  "types": "lib/index.d.js",
+  "types": "lib/index.d.ts",
   "files": [
     "lib/**/*"
   ],
   "license": "Apache-2.0",
   "dependencies": {
-    "@daml/ledger": "1.12.0",
-    "@daml/react": "1.12.0",
+    "@daml/ledger": "1.16.0",
+    "@daml/react": "1.16.0",
     "@mojotech/json-type-validation": "^3.1.0",
-    "jsonwebtoken": "^8.5.1",
-    "react": "^16.12.0"
+    "jsonwebtoken": "^8.5.1"
   },
   "repository": "github:digital-asset/dabl-react",
   "scripts": {
     "build": "tsc --build",
     "build:watch": "tsc --build --watch",
-    "test": "jest",
+    "test": "jest --coverage",
     "format": "prettier --write .",
     "format-check": "prettier --check .",
     "lint": "eslint --ext .ts --ignore-pattern lib/ --max-warnings 0 ./"
   },
   "devDependencies": {
-    "@daml/types": "1.12.0",
+    "@daml/types": "1.16.0",
     "@testing-library/react-hooks": "^5.0.3",
     "@types/jest": "^24.0.23",
     "@types/jsonwebtoken": "^8.5.0",
@@ -50,6 +49,12 @@
     "ts-jest": "^26.1.1",
     "typescript": "~3.8.3"
   },
+  "peerDependencies": {
+    "@daml/ledger": "1.16.0",
+    "@daml/react": "1.16.0",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
   "resolutions": {
     "@types/react": "^16.9.20"
   },
@@ -58,6 +63,9 @@
     "testMatch": [
       "**/__tests__/**/*.+(ts|tsx|js)",
       "**/?(*.)+(spec|test).+(ts|tsx|js)"
+    ],
+    "testPathIgnorePatterns": [
+      "/lib/"
     ],
     "transform": {
       "^.+\\.(ts|tsx)$": "ts-jest",
