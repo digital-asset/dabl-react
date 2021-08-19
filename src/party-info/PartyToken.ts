@@ -1,6 +1,6 @@
 import { decode } from 'jsonwebtoken';
 
-interface AccessTokenPayload {
+interface PartyTokenPayload {
   exp: number;
   'https://daml.com/ledger-api': {
     applicationId: string;
@@ -14,9 +14,9 @@ interface AccessTokenPayload {
   partyName: string;
 }
 
-function isAccessTokenPayload(
+function isPartyTokenPayload(
   payload: { [key: string]: any } | null | string
-): payload is AccessTokenPayload {
+): payload is PartyTokenPayload {
   if (!payload || typeof payload === 'string') {
     return false;
   }
@@ -24,7 +24,7 @@ function isAccessTokenPayload(
   const { exp, ledgerId, owner, party, partyName } = payload;
   const ledger_api = payload['https://daml.com/ledger-api'];
 
-  if (
+  return (
     !!exp &&
     !!ledgerId &&
     !!owner &&
@@ -34,26 +34,22 @@ function isAccessTokenPayload(
     !!ledger_api.ledgerId &&
     !!ledger_api.actAs &&
     !!ledger_api.readAs
-  ) {
-    return true;
-  }
-
-  return false;
+  );
 }
 
 /**
  * A class for parsing and interacting with Daml Hub ledger access tokens.
  */
-export class AccessToken {
+export class PartyToken {
   token: string;
-  payload?: AccessTokenPayload;
+  payload?: PartyTokenPayload;
 
   constructor(token: string) {
     this.token = token;
 
     const decoded = decode(token);
 
-    if (isAccessTokenPayload(decoded)) {
+    if (isPartyTokenPayload(decoded)) {
       this.payload = decoded;
     } else {
       throw new Error(`Access token not in Daml Hub format: ${token}`);
@@ -109,8 +105,18 @@ export class AccessToken {
       return asSeconds - timeNow <= 0;
     }
   }
-}
 
-AccessToken.prototype.toString = function accessTokenToString() {
-  return `${this.token}`;
-};
+  toJSON() {
+    return {
+      token: this.token,
+      party: this.party,
+      partyName: this.partyName,
+      ledgerId: this.ledgerId,
+      isExpired: this.isExpired,
+    };
+  }
+
+  toString() {
+    return `${this.token}`;
+  }
+}

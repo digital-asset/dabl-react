@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import { sign } from 'jsonwebtoken';
-import { AccessToken } from './AccessToken';
+import { PartyToken } from './PartyToken';
 
 const expiresIn = new Date().getTime() / 1000 + 24 * 60 * 60;
 
@@ -31,29 +31,29 @@ const invalidToken2 = {
   },
 };
 
-function newAccessToken(token: object | string): AccessToken {
+function newPartyToken(token: object | string): PartyToken {
   if (typeof token === 'string') {
-    return new AccessToken(sign(token, 'secret'));
+    return new PartyToken(sign(token, 'secret'));
   } else {
-    return new AccessToken(sign(token, 'secret', { noTimestamp: true }));
+    return new PartyToken(sign(token, 'secret', { noTimestamp: true }));
   }
 }
 
 test('access-token - valid', () => {
-  expect(() => newAccessToken(validToken)).not.toThrowError();
+  expect(() => newPartyToken(validToken)).not.toThrowError();
 });
 
 test('access-token - invalid', () => {
-  expect(() => newAccessToken(invalidToken1)).toThrowError('Access token not in Daml Hub format');
-  expect(() => newAccessToken(invalidToken2)).toThrowError('Access token not in Daml Hub format');
+  expect(() => newPartyToken(invalidToken1)).toThrowError('Access token not in Daml Hub format');
+  expect(() => newPartyToken(invalidToken2)).toThrowError('Access token not in Daml Hub format');
 });
 
 test('access-token - payload', () => {
-  expect(newAccessToken(validToken).payload).toEqual(validToken);
+  expect(newPartyToken(validToken).payload).toEqual(validToken);
 });
 
 test('access-token - getters', () => {
-  const token = newAccessToken(validToken);
+  const token = newPartyToken(validToken);
 
   expect(token.party).toBe('ledger-party-abcd');
   expect(token.partyName).toBe('Frank');
@@ -62,7 +62,7 @@ test('access-token - getters', () => {
 });
 
 test('access-token - missing getters', () => {
-  let token = newAccessToken(validToken);
+  let token = newPartyToken(validToken);
   delete token.payload;
 
   expect(() => token.party).toThrowError('Party identifier not found in token');
@@ -74,15 +74,15 @@ test('access-token - missing getters', () => {
 test('access-token - expiry check', () => {
   const nowInSeconds = new Date().getTime() / 1000;
 
-  const expiredToken = newAccessToken({ ...validToken, exp: nowInSeconds - 10000 });
+  const expiredToken = newPartyToken({ ...validToken, exp: nowInSeconds - 10000 });
   expect(expiredToken.isExpired).toBe(true);
 
-  const notYet = newAccessToken({ ...validToken, exp: nowInSeconds + 10000 });
+  const notYet = newPartyToken({ ...validToken, exp: nowInSeconds + 10000 });
   expect(notYet.isExpired).toBe(false);
 });
 
 test('access-token - toString', () => {
-  const token = newAccessToken(validToken);
+  const token = newPartyToken(validToken);
   expect(`${token}`).toBe(sign(validToken, 'secret', { noTimestamp: true }));
   expect(token.token).toBe(sign(validToken, 'secret', { noTimestamp: true }));
 });
