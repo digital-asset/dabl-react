@@ -1,4 +1,12 @@
-import { Decoder, array, boolean, number, object, string } from '@mojotech/json-type-validation';
+import {
+  Decoder,
+  array,
+  boolean,
+  number,
+  object,
+  string,
+  optional,
+} from '@mojotech/json-type-validation';
 import { detectAppDomainType, DomainType } from '../utils';
 
 const PUBLIC_DISPLAY_NAME = 'Public';
@@ -16,7 +24,7 @@ interface LegacyAPIResponse {
 }
 
 const legacyAPIDecoder: Decoder<LegacyAPIResponse> = object({
-  userAdminParty: string(),
+  userAdminParty: optional(string()),
   publicParty: string(),
 });
 
@@ -36,7 +44,7 @@ const appAPIDecoder: Decoder<AppAPIResponse> = object({
   status: number(),
 });
 
-type DefaultParties = [string | undefined, string | undefined];
+export type DefaultParties = [string | undefined, string | undefined];
 
 function getPartyIdByName(list: PartyDetails[], displayName: string): string | undefined {
   return list.find(p => p.displayName === displayName)?.identifier;

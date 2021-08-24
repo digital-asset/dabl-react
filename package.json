@@ -33,7 +33,7 @@
     "lint": "eslint --ext .ts --ignore-pattern lib/ --max-warnings 0 ./"
   },
   "devDependencies": {
-    "@daml/types": "1.16.0",
+    "@daml/types": "^1.16.0",
     "@testing-library/react-hooks": "^5.0.3",
     "@types/jest": "^24.0.23",
     "@types/jsonwebtoken": "^8.5.0",
@@ -50,8 +50,8 @@
     "typescript": "~3.8.3"
   },
   "peerDependencies": {
-    "@daml/ledger": "1.16.0",
-    "@daml/react": "1.16.0",
+    "@daml/ledger": "^1.16.0",
+    "@daml/react": "^1.16.0",
     "react": "^16.12.0",
     "react-dom": "^16.12.0"
   },

@@ -102,6 +102,10 @@ Example:
 />
 ```
 
+#### Logout
+
+Import and call the function `damlHubLogout()` to log out the user.
+
 ### API Hooks
 
 `@daml/hub-react` exposes a context with which you should wrap around your entire application, `<DamlHub token='...'> {/* ... */} </DamlHub>`.
@@ -114,13 +118,36 @@ APIs that retrieve data are polled and updated every 5 seconds by default. The p
 
 Daml Hub provides two 'default parties' that are available for lookup by any unauthenticated client. These are `Public` and `UserAdmin`. The `UserAdmin` party is not allocated automatically - this party must first be allocated via the Daml Hub console before showing up.
 
+The party identifiers may be fetched individually as below.
+
+```tsx
+const publicParty = usePublicParty();
+
+if (!publicParty) {
+  // Still loading
+} else {
+  console.log(publicParty);
+}
+
+const adminParty = useAdminParty();
+
+if (!userAdminParty) {
+  // Still loading, or UserAdmin is yet to be allocated
+} else {
+  console.log(userAdminParty);
+}
+```
+
+The hook `useDefaultParties` is the same as the above two, but returns both parties at once as an array
+tuple. This is a helpful shortcut if making heavy usage of both parties.
+
 ```tsx
 const [publicParty, userAdminParty] = useDefaultParties();
 
 if (!publicParty || !userAdminParty) {
   // Still loading, UserAdmin is yet to be allocated, or something went wrong
 } else {
-  console.log(publicParty.identifier, userAdminParty.identifier);
+  console.log(publicParty, userAdminParty);
 }
 ```
 

@@ -1,8 +1,12 @@
 import { DamlHub } from './context/DamlHub';
-export { useDefaultParties } from './context/DamlHub';
+export {
+  useDefaultParties,
+  useAdminParty,
+  usePublicParty,
+  usePublicToken,
+} from './context/DamlHub';
 
-export { PartyToken } from './party-info/PartyToken';
-export { PartyInfo } from './party-info/PartyInfo';
+export { PartyToken } from './party-token/PartyToken';
 export {
   PublicLedger,
   fetchPublicToken,
@@ -16,10 +20,11 @@ export {
   useStreamFetchByKeysAsPublic,
   useReloadAsPublic,
 } from './public-streams/PublicLedger';
+export { DefaultParties } from './default-parties/defaultParties';
 
 export { convertPartiesJson } from './login/PartiesInput';
-export { DamlHubLogin } from './login/DamlHubLogin';
+export { DamlHubLogin, damlHubLogout } from './login/DamlHubLogin';
 
-export { isRunningOnHub, detectAppDomainType, DomainType } from './utils';
+export { isRunningOnHub, damlHubEnvironment, detectAppDomainType, DomainType } from './utils';
 
 export default DamlHub;

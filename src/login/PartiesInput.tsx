@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { PartyToken } from '../party-info/PartyToken';
+import { PartyToken } from '../party-token/PartyToken';
 import { asyncReader } from '../utils';
 
 type PartyDetails = {

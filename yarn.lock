@@ -331,7 +331,7 @@
     "@daml/types" "1.16.0"
     react "^16.12.0"
 
-"@daml/types@1.16.0":
+"@daml/types@1.16.0", "@daml/types@^1.16.0":
   version "1.16.0"
   resolved "https://registry.yarnpkg.com/@daml/types/-/types-1.16.0.tgz#e7fa4f1218699f90054e7e1e6489d383681c8692"
   integrity sha512-pQsI7HLtfre9okxGdXA0SPfVs4uhExWGoP0I+p1Jm6ZcmkGy92B9kIWi8YgZIF96Ve/55IzsrBmAKtMNKBZsCw==

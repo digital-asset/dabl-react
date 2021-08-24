@@ -23,6 +23,47 @@ export const detectAppDomainType = (): DomainType => {
   }
 };
 
+export const damlHubEnvironment = (): {
+  hostname: string;
+  baseURL: string | undefined;
+  wsURL: string | undefined;
+  ledgerId: string | undefined;
+} => {
+  const hostname = window.location.hostname.split('.').slice(1).join('.');
+  const ledgerId =
+    detectAppDomainType() === DomainType.LEGACY_DOMAIN
+      ? window.location.hostname.split('.')[0]
+      : undefined;
+  const baseURL = hubBaseURL();
+  const wsURL = hubWsURL();
+
+  return { hostname, baseURL, wsURL, ledgerId };
+};
+
+const hubBaseURL = (): string | undefined => {
+  if (detectAppDomainType() === DomainType.APP_DOMAIN) {
+    return `${window.location.origin}/`;
+  } else if (detectAppDomainType() === DomainType.LEGACY_DOMAIN) {
+    const ledgerId = window.location.hostname.split('.')[0];
+    const hubHostname = window.location.hostname.split('.').slice(1).join('.');
+    return `https://api.${hubHostname}/data/${ledgerId}/`;
+  } else {
+    return undefined;
+  }
+};
+
+const hubWsURL = (): string | undefined => {
+  if (detectAppDomainType() === DomainType.APP_DOMAIN) {
+    return `wss://${window.location.hostname}/`;
+  } else if (detectAppDomainType() === DomainType.LEGACY_DOMAIN) {
+    const ledgerId = window.location.hostname.split('.')[0];
+    const hubHostname = window.location.hostname.split('.').slice(1).join('.');
+    return `wss://api.${hubHostname}/data/${ledgerId}/`;
+  } else {
+    return undefined;
+  }
+};
+
 export const isRunningOnHub = (): boolean => {
   return detectAppDomainType() !== DomainType.NON_HUB_DOMAIN;
 };
@@ -50,17 +91,32 @@ export const asyncReader = (file: File): Promise<string> => {
   });
 };
 
-export const usePolling = (fn: () => Promise<void>, interval: number, deps: any[]) => {
+export const usePolling = (fn: () => Promise<void>, interval: number) => {
   React.useEffect(() => {
     if (!isRunningOnHub()) {
       console.warn('WARNING: Disabling polling, app is not running on Daml Hub.');
       return () => {};
-    } else if (interval !== 0) {
+    } else if (interval > 0) {
       let intervalID = setInterval(fn, interval);
       return () => clearInterval(intervalID);
     } else {
       fn(); // Run once
       return () => {};
     }
-  }, [interval, ...deps]);
+  }, [fn, interval]);
 };
+
+// function raiseParamsToHash(loginRoute: string) {
+//   const url = new URL(window.location.href);
+
+//   // When DABL login redirects back to app, hoist the query into the hash route.
+//   // This allows react-router's HashRouter to see and parse the supplied params
+
+//   // i.e., we want to turn
+//   // ledgerid.projectdabl.com/?party=party&token=token/#/
+//   // into
+//   // ledgerid.projectdabl.com/#/?party=party&token=token
+//   if (url.search !== '' && url.hash === `#/${loginRoute}`) {
+//     window.location.href = `${url.origin}${url.pathname}#/${loginRoute}${url.search}`;
+//   }
+// }
