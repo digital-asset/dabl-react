@@ -40,6 +40,7 @@ enum PartyErrors {
   InvalidPartyDetailError,
   LedgerMismatchError,
   ExpiredTokenError,
+  MissingPublicParty,
 }
 
 class InvalidPartiesError extends Error {
@@ -54,7 +55,13 @@ class InvalidPartiesError extends Error {
 function validateParties(parties: PartyDetails[], publicPartyId: string): void {
   // True if any ledgerIds do not match the app's deployed ledger Id
   const givenPublicParty = parties.find(p => p.party.includes('public-'));
-  const invalidLedger = givenPublicParty?.party === publicPartyId;
+
+  if (!givenPublicParty) {
+    throw new InvalidPartiesError(
+      'Public party missing in parties.json',
+      PartyErrors.MissingPublicParty
+    );
+  }
 
   // True if any token is expired
   const invalidTokens = parties.reduce(
@@ -62,8 +69,8 @@ function validateParties(parties: PartyDetails[], publicPartyId: string): void {
     false
   );
 
-  if (invalidLedger) {
-    const errMessage = `Your parties.json file might be for a different ledger! File uses public party ${givenPublicParty} but app's detected public party is ${publicPartyId}`;
+  if (givenPublicParty.party !== publicPartyId) {
+    const errMessage = `Your parties.json file might be for a different ledger! File uses public party ${givenPublicParty.party} but app's detected public party is ${publicPartyId}`;
 
     throw new InvalidPartiesError(errMessage, PartyErrors.LedgerMismatchError);
   }
