@@ -1,9 +1,12 @@
 import React from 'react';
 
 import { PartyToken } from '../party-token/PartyToken';
-import { detectAppDomainType, DomainType, getCookieValue } from '../utils';
+import { deleteCookie, detectAppDomainType, DomainType, getCookieValue } from '../utils';
 
 import { PartiesInput } from './PartiesInput';
+
+const DABL_LEDGER_ACCESS_TOKEN = 'DABL_LEDGER_ACCESS_TOKEN';
+const DAMLHUB_LEDGER_ACCESS_TOKEN = 'DAMLHUB_LEDGER_ACCESS_TOKEN';
 
 interface LoginMethod<RenderFn> {
   text?: React.ReactChild; // Override the text (if applicable)
@@ -19,19 +22,13 @@ interface LoginOptions {
   };
 }
 
-const LOGGED_IN_KEY = '.hub/v1/auth/logged-in';
-
-const isLoggedIn = (): boolean => {
-  return !!sessionStorage.getItem(LOGGED_IN_KEY);
-};
-
-const setLoginMarker = (c: string): void => {
-  console.log('CALLING SET LOGIN MARKER FROM: ', c);
-  sessionStorage.setItem(LOGGED_IN_KEY, 'true');
-};
-
 export const damlHubLogout = (): void => {
-  sessionStorage.removeItem(LOGGED_IN_KEY);
+  if (detectAppDomainType() === DomainType.LEGACY_DOMAIN) {
+    deleteCookie(DABL_LEDGER_ACCESS_TOKEN, 'projectdabl.com');
+    deleteCookie(DAMLHUB_LEDGER_ACCESS_TOKEN, 'projectdabl.com');
+  } else if (detectAppDomainType() === DomainType.APP_DOMAIN) {
+    deleteCookie(DAMLHUB_LEDGER_ACCESS_TOKEN);
+  }
 };
 
 // function raiseParamsToHash(loginRoute: string) {
@@ -212,10 +209,6 @@ const ButtonLogin: React.FC<DamlHubLoginProps> = props => {
     const DABL_LEDGER_ACCESS_TOKEN = getCookieValue('DABL_LEDGER_ACCESS_TOKEN');
     const tokenFromCookie = DAMLHUB_LEDGER_ACCESS_TOKEN || DABL_LEDGER_ACCESS_TOKEN;
 
-    if (!isLoggedIn()) {
-      return;
-    }
-
     if (tokenFromCookie) {
       try {
         const at = new PartyToken(tokenFromCookie);
@@ -229,11 +222,10 @@ const ButtonLogin: React.FC<DamlHubLoginProps> = props => {
   }, [window.location]);
 
   const handleButtonLogin = () => {
-    setLoginMarker('button log in!');
+    const damlHubCookieToken = getCookieValue(DAMLHUB_LEDGER_ACCESS_TOKEN);
+    const legacyCookieToken = getCookieValue(DABL_LEDGER_ACCESS_TOKEN);
 
-    const DAMLHUB_LEDGER_ACCESS_TOKEN = getCookieValue('DAMLHUB_LEDGER_ACCESS_TOKEN');
-    const DABL_LEDGER_ACCESS_TOKEN = getCookieValue('DABL_LEDGER_ACCESS_TOKEN');
-    const tokenFromCookie = DAMLHUB_LEDGER_ACCESS_TOKEN || DABL_LEDGER_ACCESS_TOKEN;
+    const tokenFromCookie = damlHubCookieToken || legacyCookieToken;
 
     if (!tokenFromCookie) {
       if (detectAppDomainType() === DomainType.APP_DOMAIN) {
@@ -290,9 +282,6 @@ const FileLogin: React.FC<Omit<DamlHubLoginProps, 'onLogin'>> = props => {
         {showButton && <p>{text}</p>}
         <PartiesInput
           onPartiesLoad={(creds, err) => {
-            if (creds.length > 0) {
-              setLoginMarker('file login!!!');
-            }
             onPartiesLoad(creds, err);
           }}
         />
@@ -329,7 +318,6 @@ const TokenLogin: React.FC<DamlHubLoginProps> = props => {
     try {
       const at = new PartyToken(jwtInput);
       onLogin && onLogin(at);
-      setLoginMarker('token login!!!');
     } catch (err) {
       onLogin && onLogin(undefined, err);
     }

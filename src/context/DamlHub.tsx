@@ -4,41 +4,57 @@ import { usePolling } from '../utils';
 import { PartyToken } from '../party-token/PartyToken';
 import { fetchPublicToken, PublicLedger } from '../public-streams/PublicLedger';
 import { DefaultParties, fetchDefaultParties } from '../default-parties/defaultParties';
+import {
+  deleteInstance,
+  deployAutomation,
+  listAutomationInstances,
+  listPublishedAutomations,
+  Automation,
+  Instance,
+  undeployAutomation,
+} from '../automation/automation';
 
 const DEFAULT_POLL_INTERVAL = 5000; // 5 seconds
 
 interface DamlHubCtx {
+  partyToken?: PartyToken;
   publicToken?: PartyToken;
   publicParty?: string;
   userAdminParty?: string;
+  automations?: Automation[];
+  instances?: Instance[];
 }
 
 const initialDamlHubCtx = {
+  partyToken: undefined,
   publicToken: undefined,
   publicParty: undefined,
   userAdminParty: undefined,
+  automations: undefined,
+  instances: undefined,
 };
 
 enum ActionType {
+  SET_PARTY_TOKEN = 'set-party-token',
   SET_PUBLIC_TOKEN = 'set-public-token',
   SET_PUBLIC_PARTY = 'set-public-party',
   SET_USERADMIN_PARTY = 'set-useradmin-party',
+  SET_AUTOMATIONS = 'set-automations',
+  SET_INSTANCES = 'set-instances',
 }
 
 type Action =
-  | { type: ActionType.SET_PUBLIC_TOKEN; token: PartyToken }
-  | { type: ActionType.SET_PUBLIC_PARTY; party?: string }
-  | { type: ActionType.SET_USERADMIN_PARTY; party?: string };
+  | { type: ActionType.SET_PARTY_TOKEN; partyToken: PartyToken }
+  | { type: ActionType.SET_PUBLIC_TOKEN; publicToken: PartyToken }
+  | { type: ActionType.SET_PUBLIC_PARTY; publicParty?: string }
+  | { type: ActionType.SET_USERADMIN_PARTY; userAdminParty?: string }
+  | { type: ActionType.SET_AUTOMATIONS; automations: Automation[] }
+  | { type: ActionType.SET_INSTANCES; instances: Instance[] };
 
 const reducer = (state: DamlHubCtx, action: Action): DamlHubCtx => {
-  switch (action.type) {
-    case ActionType.SET_PUBLIC_TOKEN:
-      return { ...state, publicToken: action.token };
-    case ActionType.SET_PUBLIC_PARTY:
-      return { ...state, publicParty: action.party };
-    case ActionType.SET_USERADMIN_PARTY:
-      return { ...state, userAdminParty: action.party };
-  }
+  // Clone the `action` object, excluding the 'type' key
+  const newState: DamlHubCtx = (({ type, ...o }) => o)(action);
+  return { ...state, ...newState };
 };
 
 interface DamlHubProps {
@@ -49,9 +65,16 @@ interface DamlHubProps {
 // This empty default context value does not escape outside of the provider.
 const DamlHubContext = createContext<DamlHubCtx | undefined>(undefined);
 
-export const DamlHub: React.FC<DamlHubProps> = ({ children, interval: _i }) => {
+export const DamlHub: React.FC<DamlHubProps> = ({ children, token, interval: _i }) => {
   const [ctx, dispatch] = React.useReducer(reducer, initialDamlHubCtx);
-  const { publicToken, publicParty, userAdminParty } = ctx;
+  const { partyToken, publicToken, publicParty, userAdminParty } = ctx;
+
+  React.useEffect(() => {
+    if (token && !partyToken) {
+      const partyToken: PartyToken = typeof token === 'string' ? new PartyToken(token) : token;
+      dispatch({ type: ActionType.SET_PARTY_TOKEN, partyToken });
+    }
+  }, [token]);
 
   const interval = _i || DEFAULT_POLL_INTERVAL;
 
@@ -59,17 +82,29 @@ export const DamlHub: React.FC<DamlHubProps> = ({ children, interval: _i }) => {
     // No need to poll unless there is no token, or it is expired
     if (!publicToken || publicToken.isExpired) {
       const pt = await fetchPublicToken();
-      pt && dispatch({ type: ActionType.SET_PUBLIC_TOKEN, token: new PartyToken(pt) });
+      pt && dispatch({ type: ActionType.SET_PUBLIC_TOKEN, publicToken: new PartyToken(pt) });
     }
 
     // No need to keep polling default parties after both have been found.
     if (!publicParty || !userAdminParty) {
       const [p, ua] = await fetchDefaultParties();
 
-      !publicParty && dispatch({ type: ActionType.SET_PUBLIC_PARTY, party: p });
-      !userAdminParty && dispatch({ type: ActionType.SET_USERADMIN_PARTY, party: ua });
+      !publicParty && dispatch({ type: ActionType.SET_PUBLIC_PARTY, publicParty: p });
+      !userAdminParty && dispatch({ type: ActionType.SET_USERADMIN_PARTY, userAdminParty: ua });
     }
-  }, [publicToken, publicParty, userAdminParty]);
+
+    // List published automations
+    if (publicToken) {
+      const automations = await listPublishedAutomations(publicToken.token);
+      !!automations && dispatch({ type: ActionType.SET_AUTOMATIONS, automations });
+    }
+
+    // List running automation instances
+    if (partyToken) {
+      const instances = await listAutomationInstances(partyToken.token);
+      !!instances && dispatch({ type: ActionType.SET_INSTANCES, instances });
+    }
+  }, [partyToken, publicToken, publicParty, userAdminParty]);
 
   usePolling(hubAPIFetches, interval);
 
@@ -128,4 +163,63 @@ export function usePublicToken(): PartyToken | undefined {
   }
 
   return ctx.publicToken;
+}
+
+/**
+ * React hook to manage automations and create deployments.
+ */
+export function useAutomations() {
+  var ctx = React.useContext(DamlHubContext);
+  if (ctx === undefined) {
+    throw new Error('useAutomations must be within a DamlHub Provider');
+  }
+
+  const { automations, partyToken } = ctx;
+
+  const undeployAutomationWrapper = !!partyToken
+    ? async (artifactHash: string) => {
+        undeployAutomation(partyToken.token, artifactHash);
+      }
+    : undefined;
+
+  return { automations, undeployAutomation: undeployAutomationWrapper };
+}
+
+/**
+ * React hook to manage instances of running automations.
+ */
+export function useAutomationInstances() {
+  var ctx = React.useContext(DamlHubContext);
+  if (ctx === undefined) {
+    throw new Error('useAutomationInstances must be within a DamlHub Provider');
+  }
+
+  const { instances, automations, partyToken } = ctx;
+
+  const deployAutomationWrapper =
+    !!partyToken && !!automations
+      ? async (artifactHash: string, trigger?: string, token?: string) => {
+          if (token) {
+            deployAutomation(token, automations, artifactHash, trigger);
+          } else {
+            deployAutomation(partyToken.token, automations, artifactHash, trigger);
+          }
+        }
+      : undefined;
+
+  const deleteInstanceWrapper = !!partyToken
+    ? async (instanceId: string, owner: string, token?: string) => {
+        if (token) {
+          deleteInstance(token, instanceId, owner);
+        } else {
+          deleteInstance(partyToken.token, instanceId, owner);
+        }
+      }
+    : undefined;
+
+  return {
+    instances,
+    deployAutomation: deployAutomationWrapper,
+    deleteInstance: deleteInstanceWrapper,
+  };
 }

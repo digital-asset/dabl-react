@@ -184,21 +184,28 @@ Daml Hub supports [automations](#) to execute ledger actions automatically. Ther
 When deploying instances, they run under the authorization of the logged in party (the token specified in the `DamlHub` context `token` prop).
 
 ```tsx
-const [automations, undeployAutomation] = useAutomations();
-const [instances, deployInstance, undeployInstance] = useAutomationInstances();
+const { automations, undeployAutomation } = useAutomations();
+const { instances, deployAutomation, deleteInstance } = useAutomationInstances();
 
 console.log(automations);
 console.log(instances);
 
 React.useEffect(() => {
   // Start a running instance of the specified automation by hash
-  const { id: instance1 } = deployInstance(automations[0].artifactHash, automations[0].owner);
+  const { id: instance0 } = await deployAutomation(
+    automations[0].artifactHash,
+    automations[0].owner
+  );
 
-  // Start an instance of another automation
-  const { id: instance2 } = deployInstance(automations[1].artifactHash, automations[1].owner);
+  // Start an instance of a trigger-type automation by name
+  const { id: instance1 } = await deployAutomation(
+    automations[1].artifactHash,
+    automations[1].owner,
+    automations[1].automationEntity.value.triggerNames[2]
+  );
 
   // Undeploy a specific instance
-  undeployInstance(instance2, automations[1].owner);
+  deleteInstance(instance1, automations[1].owner);
 
   // Remove all instances of a certain automation
   undeployAutomation(automations[0].artifactHash);

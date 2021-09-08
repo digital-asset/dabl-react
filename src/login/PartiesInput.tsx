@@ -1,4 +1,5 @@
 import React from 'react';
+import { fetchDefaultParties } from '../default-parties/defaultParties';
 
 import { PartyToken } from '../party-token/PartyToken';
 import { asyncReader } from '../utils';
@@ -50,12 +51,10 @@ class InvalidPartiesError extends Error {
   }
 }
 
-function validateParties(parties: PartyDetails[], ledgerId: string): void {
+function validateParties(parties: PartyDetails[], publicPartyId: string): void {
   // True if any ledgerIds do not match the app's deployed ledger Id
-  const invalidLedger = parties.reduce(
-    (valid, party) => valid || party.ledgerId !== ledgerId,
-    false
-  );
+  const givenPublicParty = parties.find(p => p.party.includes('public-'));
+  const invalidLedger = givenPublicParty?.party === publicPartyId;
 
   // True if any token is expired
   const invalidTokens = parties.reduce(
@@ -64,8 +63,7 @@ function validateParties(parties: PartyDetails[], ledgerId: string): void {
   );
 
   if (invalidLedger) {
-    const fileLedgerId = parties.find(p => p.ledgerId !== ledgerId)?.ledgerId;
-    const errMessage = `Your parties.json file is for a different ledger! File uses ledger ${fileLedgerId} but app is running on ledger ${ledgerId}`;
+    const errMessage = `Your parties.json file might be for a different ledger! File uses public party ${givenPublicParty} but app's detected public party is ${publicPartyId}`;
 
     throw new InvalidPartiesError(errMessage, PartyErrors.LedgerMismatchError);
   }
@@ -80,7 +78,7 @@ function validateParties(parties: PartyDetails[], ledgerId: string): void {
 
 export function convertPartiesJson(
   partiesJson: string,
-  ledgerId: string,
+  publicPartyId: string,
   validateFile: boolean = true
 ): PartyToken[] {
   const parsed: PartyDetails[] = JSON.parse(partiesJson);
@@ -93,7 +91,7 @@ export function convertPartiesJson(
       );
     }
 
-    validateParties(parsed, ledgerId);
+    validateParties(parsed, publicPartyId);
   }
 
   return parsed.map(p => new PartyToken(p.token));
@@ -117,10 +115,13 @@ export const PartiesInput = ({
   const tryPartyConversion = React.useCallback(
     (contents: string) => {
       try {
-        const ledgerId = window.location.hostname.split('.')[0]; // NOTE: Will break with custom subdomains!
-        const parties = convertPartiesJson(contents, ledgerId, validateFile);
-
-        setParties(parties);
+        fetchDefaultParties().then(parties => {
+          const publicParty = parties[0];
+          if (publicParty) {
+            const parties = convertPartiesJson(contents, publicParty, validateFile);
+            setParties(parties);
+          }
+        });
       } catch (error) {
         setParties([]);
         setError(error.message);

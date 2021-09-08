@@ -1,15 +1,17 @@
 import { createElement, PropsWithChildren, useEffect, useState } from 'react';
+import { Decoder, object, string } from '@mojotech/json-type-validation';
+
 import { Party, Template } from '@daml/types';
 import Ledger, { Query, StreamCloseEvent } from '@daml/ledger';
 import { createLedgerContext, FetchByKeysResult, FetchResult, QueryResult } from '@daml/react';
-import { Decoder, object, string } from '@mojotech/json-type-validation';
+
 import { detectAppDomainType, DomainType } from '../utils';
 
-interface APIResponse {
+interface PublicTokenResponse {
   access_token: string;
 }
 
-const APIDecoder: Decoder<APIResponse> = object({
+const PublicTokenAPIDecoder: Decoder<PublicTokenResponse> = object({
   access_token: string(),
 });
 
@@ -20,7 +22,7 @@ export async function fetchPublicToken(): Promise<string | null> {
       case DomainType.APP_DOMAIN:
         const app_response = await fetch(`//${hn}/.hub/v1/public/token`, { method: 'POST' });
         const app_json = await app_response.json();
-        const app_public = APIDecoder.runWithException(app_json);
+        const app_public = PublicTokenAPIDecoder.runWithException(app_json);
         return app_public.access_token;
       case DomainType.LEGACY_DOMAIN:
         const ledgerId = window.location.hostname.split('.')[0];
@@ -31,7 +33,7 @@ export async function fetchPublicToken(): Promise<string | null> {
           }
         );
         const legacy_json = await legacy_response.json();
-        const legacy_public = APIDecoder.runWithException(legacy_json);
+        const legacy_public = PublicTokenAPIDecoder.runWithException(legacy_json);
         return legacy_public.access_token;
       default:
         throw new Error('App not running on Daml Hub');

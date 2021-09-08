@@ -26,6 +26,12 @@ const PUBLIC_TOKEN = sign(
 
 console.log(`The PUBLIC_TOKEN is ${PUBLIC_TOKEN}`);
 
+// @ts-ignore
+delete window.location;
+
+// @ts-ignore
+window.location = new URL(`https://${TEST_LEDGER_ID}.daml.app`);
+
 function renderPublicLedgerHook<P, R>(callback: (props: P) => R): RenderHookResult<P, R> {
   const wrapper: ComponentType = ({ children }) =>
     React.createElement(PublicLedger, { publicParty: PUBLIC_PARTY }, children);

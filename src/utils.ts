@@ -16,19 +16,26 @@ export const detectAppDomainType = (): DomainType => {
     console.log('APP DOMAIN DETECTED');
     return DomainType.APP_DOMAIN;
   } else {
-    console.warn(
-      'WARNING: App UI is not running on Daml Hub. This library may behave unexpectedly.'
-    );
+    console.warn('WARNING: App UI is not running on Daml Hub.');
     return DomainType.NON_HUB_DOMAIN;
   }
 };
 
-export const damlHubEnvironment = (): {
-  hostname: string;
-  baseURL: string | undefined;
-  wsURL: string | undefined;
-  ledgerId: string | undefined;
-} => {
+/**
+ * Fetch information about the Daml Hub environment that
+ * the library is running against. Includes hostname,
+ * baseURL, wsURL, and a ledgerId (if discoverable).
+ *
+ * Returns undefined if not running on Hub
+ */
+export const damlHubEnvironment = ():
+  | {
+      hostname: string;
+      baseURL: string | undefined;
+      wsURL: string | undefined;
+      ledgerId: string | undefined;
+    }
+  | undefined => {
   const hostname = window.location.hostname.split('.').slice(1).join('.');
   const ledgerId =
     detectAppDomainType() === DomainType.LEGACY_DOMAIN
@@ -37,7 +44,7 @@ export const damlHubEnvironment = (): {
   const baseURL = hubBaseURL();
   const wsURL = hubWsURL();
 
-  return { hostname, baseURL, wsURL, ledgerId };
+  return isRunningOnHub() ? { hostname, baseURL, wsURL, ledgerId } : undefined;
 };
 
 const hubBaseURL = (): string | undefined => {
@@ -64,8 +71,20 @@ const hubWsURL = (): string | undefined => {
   }
 };
 
+/**
+ * Determine if the app is running on Daml Hub via domain detection
+ * @returns boolean
+ */
 export const isRunningOnHub = (): boolean => {
   return detectAppDomainType() !== DomainType.NON_HUB_DOMAIN;
+};
+
+export const deleteCookie = (name: string, domain?: string): void => {
+  let base = `${name}=; expires=Thu, 01-Jan-1970 00:00:01 GMT; path=/; secure;`;
+  if (domain) {
+    base = base + `domain=${domain};`;
+  }
+  document.cookie = base;
 };
 
 export const getCookieValue = (name: string): string | undefined =>
