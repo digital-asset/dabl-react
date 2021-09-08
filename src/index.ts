@@ -9,20 +9,10 @@ export {
 } from './context/DamlHub';
 
 export { PartyToken } from './party-token/PartyToken';
-export {
-  PublicLedger,
-  fetchPublicToken,
-  usePartyAsPublic,
-  useLedgerAsPublic,
-  useQueryAsPublic,
-  useFetchByKeyAsPublic,
-  useStreamQueryAsPublic,
-  useStreamQueriesAsPublic,
-  useStreamFetchByKeyAsPublic,
-  useStreamFetchByKeysAsPublic,
-  useReloadAsPublic,
-} from './public-streams/PublicLedger';
+
+export { fetchPublicToken } from './default-parties/publicToken';
 export { DefaultParties } from './default-parties/defaultParties';
+
 export { Automation, Instance } from './automation/automation';
 
 export { convertPartiesJson } from './login/PartiesInput';

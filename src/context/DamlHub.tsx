@@ -2,7 +2,7 @@ import React, { createContext } from 'react';
 
 import { usePolling } from '../utils';
 import { PartyToken } from '../party-token/PartyToken';
-import { fetchPublicToken, PublicLedger } from '../public-streams/PublicLedger';
+import { fetchPublicToken } from '../default-parties/publicToken';
 import { DefaultParties, fetchDefaultParties } from '../default-parties/defaultParties';
 import {
   deleteInstance,
@@ -108,11 +108,7 @@ export const DamlHub: React.FC<DamlHubProps> = ({ children, token, interval: _i 
 
   usePolling(hubAPIFetches, interval);
 
-  return React.createElement(
-    DamlHubContext.Provider,
-    { value: ctx },
-    publicParty ? <PublicLedger publicParty={publicParty}>{children}</PublicLedger> : children
-  );
+  return React.createElement(DamlHubContext.Provider, { value: ctx }, children);
 };
 
 /* === Public Hook Definitions === */
