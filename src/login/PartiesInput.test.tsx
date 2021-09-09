@@ -1,6 +1,6 @@
 import React from 'react';
-import { create, act } from 'react-test-renderer';
 import { sign } from 'jsonwebtoken';
+import { create, act } from 'react-test-renderer';
 
 import { convertPartiesJson, PartiesInput } from './PartiesInput';
 import { delay } from '../utils';
@@ -15,6 +15,7 @@ delete window.location;
 // @ts-ignore
 window.location = new URL(`https://${mockHostname}`);
 
+// TO-DO: Replace with jest-fetch-mock
 // @ts-ignore
 global.fetch = jest.fn(() =>
   Promise.resolve({
