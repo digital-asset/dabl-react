@@ -14,7 +14,6 @@ interface LoginMethod<RenderFn> {
 }
 
 interface LoginOptions {
-  wrapper?: React.ReactElement; // A component to wrap around each individual method component
   method: {
     button?: LoginMethod<() => React.ReactElement>;
     token?: LoginMethod<(onSubmit: () => void) => React.ReactElement>;

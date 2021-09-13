@@ -91,7 +91,6 @@ Example:
   onLogin={/* ... */}
   onPartiesLoad={/* ... */} // Get the results from the file loader
   options={{
-    wrapper: <WrapperComponent />, // An optional component that will be wrapped around each individual login component.
     method: {
       button: {
         render: () => <MyButton myProp1={/**/} myProp2={/**/} />
