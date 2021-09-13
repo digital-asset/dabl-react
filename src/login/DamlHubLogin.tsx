@@ -31,34 +31,19 @@ export const damlHubLogout = (): void => {
   }
 };
 
-// function raiseParamsToHash(loginRoute: string) {
-//   const url = new URL(window.location.href);
-
-//   // When DABL login redirects back to app, hoist the query into the hash route.
-//   // This allows react-router's HashRouter to see and parse the supplied params
-
-//   // i.e., we want to turn
-//   // ledgerid.projectdabl.com/?party=party&token=token/#/
-//   // into
-//   // ledgerid.projectdabl.com/#/?party=party&token=token
-//   if (url.search !== '' && url.hash === `#/${loginRoute}`) {
-//     window.location.href = `${url.origin}${url.pathname}#/${loginRoute}${url.search}`;
-//   }
-// }
-
 /*
- * The type is engineered to allow for the following logic.
+ * The type is engineered to allow for the following logic re: callback prop requirements.
  * Essentially, we want `onLogin` to be required at all times _except_ if _only_
  * `withFile` is given.
  *
  *
  * |-------------------------------------------------------------------------|
- * | withFile | (withButton || withToken) | callbacks                        |
+ * | withFile | (withButton || withToken) | required callback props          |
  * |-------------------------------------------------------------------------|
- * | T        | T                         | required(onLogin, onPartiesLoad) |
- * | T        | F                         | required(onPartiesLoad)          |
- * | F        | T                         | required(onLogin)                |
- * | F        | F                         | required(onLogin)                |
+ * | T        | T                         | onLogin, onPartiesLoad           |
+ * | T        | F                         | onPartiesLoad                    |
+ * | F        | T                         | onLogin                          |
+ * | F        | F                         | onLogin                          |
  * |-------------------------------------------------------------------------|
  */
 type DamlHubLoginProps =
@@ -92,73 +77,6 @@ type DamlHubLoginProps =
       onLogin: (credentials?: PartyToken, err?: string) => void;
       onPartiesLoad?: (parties?: PartyToken[], err?: string) => void;
     };
-
-// let aa: DamlHubLoginProps;
-
-// // Should work
-// aa = { onLogin: (c, e) => console.log(c, e) };
-// aa = { withFile: true, onPartiesLoad: (p, e) => console.log(p, e) };
-// aa = { withToken: true, onLogin: (c, e) => console.log(c, e) };
-// aa = {
-//   withFile: true,
-//   onPartiesLoad: (p, e) => console.log(p, e),
-//   withToken: true,
-//   onLogin: (c, e) => console.log(c, e),
-// };
-// aa = {
-//   onLogin: (c, e) => console.log(c, e),
-//   options: {
-//     method: {
-//       button: {
-//         render: () => <input />,
-//       },
-//     },
-//   },
-// };
-// aa = {
-//   onLogin: (c, e) => console.log(c, e),
-//   options: {
-//     method: {
-//       token: {
-//         render: () => <input />,
-//       },
-//     },
-//   },
-// };
-// aa = {
-//   onLogin: (c, e) => console.log(c, e),
-//   options: {
-//     method: {
-//       button: {
-//         render: () => <input />,
-//       },
-//       token: {
-//         render: () => <input />,
-//       },
-//     },
-//   },
-// };
-// aa = {
-//   onPartiesLoad: (c, e) => console.log(c, e),
-//   options: {
-//     method: {
-//       file: {
-//         render: () => <input />,
-//       },
-//     },
-//   },
-// };
-
-// // Should fail
-// aa = {};
-// aa = { withFile: true, onLogin: (c, e) => console.log(c, e) };
-// aa = { withToken: true, onPartiesLoad: (p, e) => console.log(p, e) };
-// aa = {
-//   // withFile: true,
-//   withToken: true,
-//   onLogin: (c, e) => console.log(c, e),
-//   onPartiesLoad: (p, e) => console.log(p, e),
-// };
 
 /**
  *
@@ -204,7 +122,6 @@ const ButtonLogin: React.FC<DamlHubLoginProps> = props => {
   let text = options?.method?.button?.text || 'Log in with Daml Hub';
 
   React.useEffect(() => {
-    console.log('Location changed: ', window.location);
     const DAMLHUB_LEDGER_ACCESS_TOKEN = getCookieValue('DAMLHUB_LEDGER_ACCESS_TOKEN');
     const DABL_LEDGER_ACCESS_TOKEN = getCookieValue('DABL_LEDGER_ACCESS_TOKEN');
     const tokenFromCookie = DAMLHUB_LEDGER_ACCESS_TOKEN || DABL_LEDGER_ACCESS_TOKEN;
@@ -216,8 +133,6 @@ const ButtonLogin: React.FC<DamlHubLoginProps> = props => {
       } catch (err) {
         onLogin && onLogin(undefined, err);
       }
-    } else {
-      console.log('cookie not found');
     }
   }, [window.location]);
 

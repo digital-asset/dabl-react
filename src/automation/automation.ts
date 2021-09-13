@@ -97,7 +97,7 @@ export type Instance = {
   config: {
     tag: string;
     value: {
-      name: string; // the one we want
+      name: string;
       runAs: string;
       configMap: {};
     };

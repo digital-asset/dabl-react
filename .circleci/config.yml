@@ -9,6 +9,9 @@ commands:
       - node/install-packages:
           pkg-manager: yarn
       - run:
+          command: yarn install
+          name: Install dependencies
+      - run:
           command: yarn test
           name: Run tests via yarn
       - run:

@@ -1,4 +1,5 @@
 import { decode } from 'jsonwebtoken';
+import { array, Decoder, number, object, string } from '@mojotech/json-type-validation';
 
 interface PartyTokenPayload {
   exp: number;
@@ -14,28 +15,19 @@ interface PartyTokenPayload {
   partyName: string;
 }
 
-function isPartyTokenPayload(
-  payload: { [key: string]: any } | null | string
-): payload is PartyTokenPayload {
-  if (!payload || typeof payload === 'string') {
-    return false;
-  }
-
-  const { exp, ledgerId, owner, party, partyName } = payload;
-  const ledger_api = payload['https://daml.com/ledger-api'];
-
-  return (
-    !!exp &&
-    !!ledgerId &&
-    !!owner &&
-    !!party &&
-    !!partyName &&
-    !!ledger_api.applicationId &&
-    !!ledger_api.ledgerId &&
-    !!ledger_api.actAs &&
-    !!ledger_api.readAs
-  );
-}
+const partyTokenDecoder: Decoder<PartyTokenPayload> = object({
+  exp: number(),
+  [`https://daml.com/ledger-api`]: object({
+    applicationId: string(),
+    ledgerId: string(),
+    actAs: array(string()),
+    readAs: array(string()),
+  }),
+  ledgerId: string(),
+  owner: string(),
+  party: string(),
+  partyName: string(),
+});
 
 /**
  * A class for parsing and interacting with Daml Hub ledger access tokens.
@@ -47,12 +39,13 @@ export class PartyToken {
   constructor(token: string) {
     this.token = token;
 
-    const decoded = decode(token);
+    const decoded = partyTokenDecoder.run(decode(token));
 
-    if (isPartyTokenPayload(decoded)) {
-      this.payload = decoded;
+    if (decoded.ok) {
+      this.payload = decoded.result;
     } else {
-      throw new Error(`Access token not in Daml Hub format: ${token}`);
+      throw new Error(`Access token not in Daml Hub format: ${token}.\n
+      \t${decoded.error.message}`);
     }
   }
 

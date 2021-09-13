@@ -1,39 +1,25 @@
 import React from 'react';
-import { fetchDefaultParties } from '../default-parties/defaultParties';
+import { Decoder, array, object, string } from '@mojotech/json-type-validation';
 
+import { fetchDefaultParties } from '../default-parties/defaultParties';
 import { PartyToken } from '../party-token/PartyToken';
-import { asyncReader } from '../utils';
+import { asyncFileReader } from '../utils';
 
 type PartyDetails = {
   ledgerId: string;
-  owner: string;
   party: string;
   partyName: string;
   token: string;
 };
 
-function isPartyDetails(partyDetails: any): partyDetails is PartyDetails {
-  return (
-    typeof partyDetails.ledgerId === 'string' &&
-    typeof partyDetails.owner === 'string' &&
-    typeof partyDetails.party === 'string' &&
-    typeof partyDetails.partyName === 'string' &&
-    typeof partyDetails.token === 'string'
-  );
-}
+const partyDetailsDecoder: Decoder<PartyDetails> = object({
+  ledgerId: string(),
+  party: string(),
+  partyName: string(),
+  token: string(),
+});
 
-function isParties(parties: any): parties is PartyDetails[] {
-  if (parties instanceof Array) {
-    // True if any element of the array is not a PartyDetails
-    const invalidPartyDetail = parties.reduce(
-      (invalid, party) => invalid || !isPartyDetails(party),
-      false
-    );
-    return !invalidPartyDetail;
-  } else {
-    return false;
-  }
-}
+const partiesJsonDecoder: Decoder<PartyDetails[]> = array(partyDetailsDecoder);
 
 enum PartyErrors {
   InvalidPartiesError,
@@ -41,6 +27,7 @@ enum PartyErrors {
   LedgerMismatchError,
   ExpiredTokenError,
   MissingPublicParty,
+  EmptyPartiesList,
 }
 
 class InvalidPartiesError extends Error {
@@ -53,6 +40,11 @@ class InvalidPartiesError extends Error {
 }
 
 function validateParties(parties: PartyDetails[], publicPartyId: string): void {
+  // No parties supplied
+  if (parties.length === 0) {
+    throw new InvalidPartiesError('Empty parties list', PartyErrors.EmptyPartiesList);
+  }
+
   // True if any ledgerIds do not match the app's deployed ledger Id
   const givenPublicParty = parties.find(p => p.party.includes('public-'));
 
@@ -88,20 +80,22 @@ export function convertPartiesJson(
   publicPartyId: string,
   validateFile: boolean = true
 ): PartyToken[] {
-  const parsed: PartyDetails[] = JSON.parse(partiesJson);
+  const parsed = JSON.parse(partiesJson);
+  const parties = partiesJsonDecoder.run(parsed);
 
-  if (validateFile) {
-    if (!isParties(parsed)) {
-      throw new InvalidPartiesError(
-        'Format does not look like parties.json',
-        PartyErrors.InvalidPartyDetailError
-      );
-    }
-
-    validateParties(parsed, publicPartyId);
+  if (!parties.ok) {
+    console.error('ERROR: ', parties.error);
+    throw new InvalidPartiesError(
+      'Format does not look like parties.json',
+      PartyErrors.InvalidPartyDetailError
+    );
   }
 
-  return parsed.map(p => new PartyToken(p.token));
+  if (validateFile) {
+    validateParties(parties.result, publicPartyId);
+  }
+
+  return parties.result.map(p => new PartyToken(p.token));
 }
 
 type PartiesInputProps = {
@@ -130,8 +124,12 @@ export const PartiesInput = ({
           }
         });
       } catch (error) {
-        setParties([]);
-        setError(error.message);
+        if (error?.type === PartyErrors.EmptyPartiesList) {
+          console.warn('WARNING: Attempted to load an empty parties.json');
+        } else {
+          setParties([]);
+          setError(error.message);
+        }
       }
     },
     [validateFile, setParties, setError]
@@ -145,7 +143,7 @@ export const PartiesInput = ({
 
   React.useEffect(() => {
     if (file) {
-      asyncReader(file).then(contents => tryPartyConversion(contents));
+      asyncFileReader(file).then(contents => tryPartyConversion(contents));
     }
   }, [file, tryPartyConversion]);
 

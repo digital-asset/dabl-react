@@ -146,7 +146,7 @@ test('parties-input - component', async () => {
     });
 
     // Wait for state changes to settle
-    await delay(5);
+    await delay(10);
   });
 
   expect(partiesLoader).toHaveBeenCalled();

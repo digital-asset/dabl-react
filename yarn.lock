@@ -310,34 +310,6 @@
     exec-sh "^0.3.2"
     minimist "^1.2.0"
 
-"@daml/ledger@1.16.0":
-  version "1.16.0"
-  resolved "https://registry.yarnpkg.com/@daml/ledger/-/ledger-1.16.0.tgz#eaf2089f5d67206132a36e58d2fc495cd980ed91"
-  integrity sha512-v8Bw5pxtqPisR1AC8vr8X+vu5B3bEX/K0vAAHzAn6j3rCJbu3xPxGqPCdYIZK09JJMvUdbwZunDS1jV4Pcl8eQ==
-  dependencies:
-    "@daml/types" "1.16.0"
-    "@mojotech/json-type-validation" "^3.1.0"
-    cross-fetch "^3.0.4"
-    events "^3.1.0"
-    isomorphic-ws "^4.0.1"
-    ws "^7.2.1"
-
-"@daml/react@1.16.0":
-  version "1.16.0"
-  resolved "https://registry.yarnpkg.com/@daml/react/-/react-1.16.0.tgz#95182f65031e0bd5c918422b1dac37e0e9443411"
-  integrity sha512-4jZrvuDfweZ3APBNDokAEo73//R3z546IO0KaTe7rdMFuOnv33XvwqOD/Bboej72msNdSZNNKsTKWbd+T1ca+A==
-  dependencies:
-    "@daml/ledger" "1.16.0"
-    "@daml/types" "1.16.0"
-    react "^16.12.0"
-
-"@daml/types@1.16.0", "@daml/types@^1.16.0":
-  version "1.16.0"
-  resolved "https://registry.yarnpkg.com/@daml/types/-/types-1.16.0.tgz#e7fa4f1218699f90054e7e1e6489d383681c8692"
-  integrity sha512-pQsI7HLtfre9okxGdXA0SPfVs4uhExWGoP0I+p1Jm6ZcmkGy92B9kIWi8YgZIF96Ve/55IzsrBmAKtMNKBZsCw==
-  dependencies:
-    "@mojotech/json-type-validation" "^3.1.0"
-
 "@istanbuljs/load-nyc-config@^1.0.0":
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/@istanbuljs/load-nyc-config/-/load-nyc-config-1.1.0.tgz#fd3db1d59ecf7cf121e80650bb86712f9b55eced"
@@ -1597,11 +1569,6 @@ esutils@^2.0.2:
   resolved "https://registry.yarnpkg.com/esutils/-/esutils-2.0.3.tgz#74d2eb4de0b8da1293711910d50775b9b710ef64"
   integrity sha512-kVscqXk4OCp68SZ0dkgEKVi6/8ij300KBWTJq32P/dYeWTSwK41WyTxalN1eRmA5Z9UU/LX9D7FWSmV9SAYx6g==
 
-events@^3.1.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/events/-/events-3.3.0.tgz#31a95ad0a924e2d2c419a813aeb2c4e878ea7400"
-  integrity sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==
-
 exec-sh@^0.3.2:
   version "0.3.6"
   resolved "https://registry.yarnpkg.com/exec-sh/-/exec-sh-0.3.6.tgz#ff264f9e325519a60cb5e273692943483cca63bc"
@@ -2237,11 +2204,6 @@ isobject@^3.0.0, isobject@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
-
-isomorphic-ws@^4.0.1:
-  version "4.0.1"
-  resolved "https://registry.yarnpkg.com/isomorphic-ws/-/isomorphic-ws-4.0.1.tgz#55fd4cd6c5e6491e76dc125938dd863f5cd4f2dc"
-  integrity sha512-BhBvN2MBpWTaSHdWRb/bwdZJ1WaehQ2L1KngkCkfLUGF0mAWAT1sQUQacEmQ0jXkFw/czDXPNQSL5u2/Krsz1w==
 
 istanbul-lib-coverage@^3.0.0:
   version "3.0.0"
@@ -3397,15 +3359,6 @@ react-test-renderer@^16.12.0:
     react-is "^16.8.6"
     scheduler "^0.19.1"
 
-react@^16.12.0:
-  version "16.14.0"
-  resolved "https://registry.yarnpkg.com/react/-/react-16.14.0.tgz#94d776ddd0aaa37da3eda8fc5b6b18a4c9a3114d"
-  integrity sha512-0X2CImDkJGApiAlcf0ODKIneSwBPhqJawOa5wCtKbu7ZECrmS26NvtSILynQ66cgkT/RJ4LidJOc3bUESwmU8g==
-  dependencies:
-    loose-envify "^1.1.0"
-    object-assign "^4.1.1"
-    prop-types "^15.6.2"
-
 read-pkg-up@^7.0.1:
   version "7.0.1"
   resolved "https://registry.yarnpkg.com/read-pkg-up/-/read-pkg-up-7.0.1.tgz#f3a6135758459733ae2b95638056e1854e7ef507"
@@ -4241,7 +4194,7 @@ write@1.0.3:
   dependencies:
     mkdirp "^0.5.1"
 
-ws@^7.2.1, ws@^7.4.6:
+ws@^7.4.6:
   version "7.5.3"
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.3.tgz#160835b63c7d97bfab418fc1b8a9fced2ac01a74"
   integrity sha512-kQ/dHIzuLrS6Je9+uv81ueZomEwH0qVYstcAQ4/Z93K8zeko9gtAbttJWzoC5ukqXY1PpoouV3+VSOqEAFt5wg==

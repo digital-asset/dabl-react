@@ -193,12 +193,14 @@ export function useAutomationInstances() {
   const { instances, automations, partyToken } = ctx;
 
   const deployAutomationWrapper =
-    !!partyToken && !!automations
+    typeof automations !== 'undefined'
       ? async (artifactHash: string, trigger?: string, token?: string) => {
-          if (token) {
+          if (!!token) {
             deployAutomation(token, automations, artifactHash, trigger);
-          } else {
+          } else if (!!partyToken) {
             deployAutomation(partyToken.token, automations, artifactHash, trigger);
+          } else {
+            Promise.reject('No token available for deploy automation call');
           }
         }
       : undefined;

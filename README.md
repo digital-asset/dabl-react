@@ -27,12 +27,12 @@ Example:
 
 ```tsx
 <DamlHubLogin onLogin={(credential, error) => {
-  if (error) { /* handle error */ }
-  else {
+  if (credential) {
     /* handle credentials. the application may cache the token and use it for subsequent API calls. */
     const { party, token } = credential;
     console.log(party, token);
   }
+  else { /* handle error */  }
 }}>
 ```
 
@@ -51,15 +51,18 @@ This prop exposes a file input that accepts the JSON file (and validates its fie
 When using this prop, the extra prop `onPartiesLoad` must be supplied as a callback to retrieve the entire list of credentials for each party into your application.
 
 ```tsx
-<DamlHubLogin withFile
+<DamlHubLogin
+  withFile
   onPartiesLoad={(credentials, error) => {
-    if (error) => { /* handle error */ }
-    else {
+    if (credentials) {
       credentials.forEach(cred => {
         console.log(cred.party, cred.token);
-      })
+      });
+    } else {
+      /* handle error */
     }
-  }}/>
+  }}
+/>
 ```
 
 3. `withToken`: Type or paste in a JWT token string directly in a form input, which is then passed back to the app as an `PartyToken` instance.
@@ -104,7 +107,8 @@ Example:
 
 #### Logout
 
-Import and call the function `damlHubLogout()` to log out the user.
+Import and call the function `damlHubLogout()` to log out the user. This function will delete the cookies
+set by Daml Hub on the application page.
 
 ### API Hooks
 
@@ -112,7 +116,7 @@ Import and call the function `damlHubLogout()` to log out the user.
 
 Within this context, React hooks become available for interacting with Hub-specific APIs, outlined below. The APIs request/responses are documented in an OpenAPI specification, and are readable on the official [API reference page](https://hub.daml.com/docs/api).
 
-APIs that retrieve data are polled and updated every 5 seconds by default. The polling interval can be overridden globally via the `<DamlHub ... interval={x}>` prop, where `x` is a number of milliseconds. Set to `0` to disable polling.
+APIs that retrieve data are polled and updated every 5 seconds by default. The polling interval can be overridden globally via the `<DamlHub ... interval={x}>` prop, where `x` is a number of milliseconds. Use `0` to disable polling.
 
 #### Default Parties
 
@@ -165,21 +169,9 @@ if (!publicToken) {
 }
 ```
 
-#### Public Streaming
-
-With the public party identifier, your application may stream ACS queries to discover contracts observable to the public party. This library exposes analog streaming hooks, all suffixed with `*AsPublic()`, to support this.
-
-Daml Hub's future roadmap includes first-class support for distributing multiparty tokens. When that support becomes available, these hooks will be deprecated in favor of simply using the ordinary ACS streaming hooks from `@daml/react`, with a `readAs: [public-id]` token claim.
-
-```ts
-// The standard hooks provided by @daml/react have an analog "AsPublic" method.
-// Eg. instead of useStreamQueries one can write:
-var contracts = useStreamQueriesAsPublic(Contract);
-```
-
 #### Automations
 
-Daml Hub supports [automations](#) to execute ledger actions automatically. There are three varieties - Daml triggers, Python bots, and integrations. APIs exist to view available automations, deploy instances, and delete running instances.
+Daml Hub supports [automations](https://hub.daml.com/docs/api#tag/Automation) to execute ledger actions automatically. There are three varieties - Daml triggers, Python bots, and integrations. APIs exist to view available automations, deploy instances, and delete running instances.
 
 When deploying instances, they run under the authorization of the logged in party (the token specified in the `DamlHub` context `token` prop).
 

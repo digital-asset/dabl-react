@@ -92,7 +92,7 @@ export const getCookieValue = (name: string): string | undefined =>
 
 export const delay = (ms: number) => new Promise(res => setTimeout(res, ms));
 
-export const asyncReader = (file: File): Promise<string> => {
+export const asyncFileReader = (file: File): Promise<string> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
@@ -124,18 +124,3 @@ export const usePolling = (fn: () => Promise<void>, interval: number) => {
     }
   }, [fn, interval]);
 };
-
-// function raiseParamsToHash(loginRoute: string) {
-//   const url = new URL(window.location.href);
-
-//   // When DABL login redirects back to app, hoist the query into the hash route.
-//   // This allows react-router's HashRouter to see and parse the supplied params
-
-//   // i.e., we want to turn
-//   // ledgerid.projectdabl.com/?party=party&token=token/#/
-//   // into
-//   // ledgerid.projectdabl.com/#/?party=party&token=token
-//   if (url.search !== '' && url.hash === `#/${loginRoute}`) {
-//     window.location.href = `${url.origin}${url.pathname}#/${loginRoute}${url.search}`;
-//   }
-// }
