@@ -28,20 +28,17 @@ jobs:
   test_build_and_publish:
     executor:
       name: node/default
-    parameters:
-      releaseTag:
-        type: string
     steps:
       - test_steps
       - run:
-          command: yarn build
           name: Compile TS to JS
+          command: yarn build
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc
       - run:
           name: Publish package
-          command: npm publish --access public --tag << parameters.releaseTag >> --dry-run
+          command: make publish
 
 workflows:
   test_library:
@@ -54,21 +51,10 @@ workflows:
   publish:
     jobs:
       - test_build_and_publish:
-          releaseTag: 'prerelease'
-          context:
-            - npm-automation
-          filters:
-            tags:
-              only: /^v.*rc.*/
-            branches:
-              ignore: /.*/
-      - test_build_and_publish:
-          releaseTag: 'latest'
           context:
             - npm-automation
           filters:
             tags:
               only: /^v.*/
-              ignore: /^v.*rc.*/
             branches:
               ignore: /.*/
