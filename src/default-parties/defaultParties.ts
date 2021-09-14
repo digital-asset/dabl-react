@@ -7,6 +7,7 @@ import {
   string,
   optional,
 } from '@mojotech/json-type-validation';
+import log from '../log';
 import { detectAppDomainType, DomainType } from '../utils';
 
 const PUBLIC_DISPLAY_NAME = 'Public';
@@ -71,7 +72,7 @@ export async function fetchDefaultParties(): Promise<DefaultParties> {
         throw new Error('App not running on Daml Hub');
     }
   } catch (error) {
-    console.error(`Error determining well known parties ${JSON.stringify(error)}`);
-    return [undefined, undefined];
+    log('default-parties').error(`Error determining well known parties ${JSON.stringify(error)}`);
+    throw error;
   }
 }

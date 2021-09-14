@@ -9,6 +9,8 @@ import {
   string,
 } from '@mojotech/json-type-validation';
 
+import log from '../log';
+
 type AutomationValue = {
   packageIds?: string[];
   entityName: string;
@@ -72,8 +74,8 @@ export const listPublishedAutomations = async (
 
     return automations;
   } catch (error) {
-    console.error(`Error fetching automation list: ${JSON.stringify(error)}`);
-    return null;
+    log('automation').error(`Error fetching automation list: ${JSON.stringify(error)}`);
+    throw error;
   }
 };
 
@@ -151,8 +153,8 @@ export const listAutomationInstances = async (token: string): Promise<Instance[]
 
     return instances;
   } catch (error) {
-    console.error(`Error fetching automation instances: ${JSON.stringify(error)}`);
-    return null;
+    log('automation').error(`Error fetching automation instances: ${JSON.stringify(error)}`);
+    throw error;
   }
 };
 
@@ -187,8 +189,10 @@ export const deployAutomation = async (
       throw new Error('Artifact hash does not exist in list of automations');
     }
   } catch (error) {
-    console.error(`Error attempting to deploy an automation instance: ${JSON.stringify(error)}`);
-    return null;
+    log('automation').error(
+      `Error attempting to deploy an automation instance: ${JSON.stringify(error)}`
+    );
+    throw error;
   }
 };
 
@@ -223,8 +227,10 @@ export const deleteInstance = async (
 
     return result === 'success';
   } catch (error) {
-    console.error(`Error attempting to delete an automation instance: ${JSON.stringify(error)}`);
-    return null;
+    log('automation').error(
+      `Error attempting to delete an automation instance: ${JSON.stringify(error)}`
+    );
+    throw error;
   }
 };
 
@@ -248,7 +254,9 @@ export const undeployAutomation = async (
     const result = successResponse.runWithException(json).result;
     return result === 'success';
   } catch (error) {
-    console.error(`Error attempting to delete an automation instance: ${JSON.stringify(error)}`);
-    return null;
+    log('automation').error(
+      `Error attempting to delete an automation instance: ${JSON.stringify(error)}`
+    );
+    throw error;
   }
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import log from './log';
 
 export enum DomainType {
   APP_DOMAIN,
@@ -10,13 +11,13 @@ export const detectAppDomainType = (): DomainType => {
   const { hostname: hn } = window.location;
 
   if (hn.includes('projectdabl') && hn.includes('.com')) {
-    console.log('LEGACY DOMAIN DETECTED');
+    log('domain').info('App running on legacy projectdabl.com domain');
     return DomainType.LEGACY_DOMAIN;
   } else if (hn.includes('daml') && hn.includes('.app')) {
-    console.log('APP DOMAIN DETECTED');
+    log('domain').info('App running on daml.app domain');
     return DomainType.APP_DOMAIN;
   } else {
-    console.warn('WARNING: App UI is not running on Daml Hub.');
+    log('domain').warn('App UI does not seem to be running on Daml Hub');
     return DomainType.NON_HUB_DOMAIN;
   }
 };
@@ -113,7 +114,7 @@ export const asyncFileReader = (file: File): Promise<string> => {
 export const usePolling = (fn: () => Promise<void>, interval: number) => {
   React.useEffect(() => {
     if (!isRunningOnHub()) {
-      console.warn('WARNING: Disabling polling, app is not running on Daml Hub.');
+      log('polling').warn('Disabling polling, app is not running on Daml Hub');
       return () => {};
     } else if (interval > 0) {
       let intervalID = setInterval(fn, interval);

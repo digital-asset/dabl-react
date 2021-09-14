@@ -4,6 +4,7 @@ import { Decoder, array, object, string } from '@mojotech/json-type-validation';
 import { fetchDefaultParties } from '../default-parties/defaultParties';
 import { PartyToken } from '../party-token/PartyToken';
 import { asyncFileReader } from '../utils';
+import log from '../log';
 
 type PartyDetails = {
   ledgerId: string;
@@ -84,7 +85,7 @@ export function convertPartiesJson(
   const parties = partiesJsonDecoder.run(parsed);
 
   if (!parties.ok) {
-    console.error('ERROR: ', parties.error);
+    log('parties-input').error('ERROR: ' + JSON.stringify(parties.error));
     throw new InvalidPartiesError(
       'Format does not look like parties.json',
       PartyErrors.InvalidPartyDetailError
@@ -125,7 +126,7 @@ export const PartiesInput = ({
         });
       } catch (error) {
         if (error?.type === PartyErrors.EmptyPartiesList) {
-          console.warn('WARNING: Attempted to load an empty parties.json');
+          log('parties-input').warn('Attempted to load an empty parties.json');
         } else {
           setParties([]);
           setError(error.message);

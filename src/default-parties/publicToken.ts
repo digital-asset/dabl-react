@@ -1,4 +1,5 @@
 import { Decoder, object, string } from '@mojotech/json-type-validation';
+import log from '../log';
 
 import { detectAppDomainType, DomainType } from '../utils';
 
@@ -34,7 +35,7 @@ export async function fetchPublicToken(): Promise<string | null> {
         throw new Error('App not running on Daml Hub');
     }
   } catch (error) {
-    console.error(`Error fetching public party token: ${JSON.stringify(error)}`);
-    return null;
+    log('public-token').error(`Error fetching public party token: ${JSON.stringify(error)}`);
+    throw error;
   }
 }

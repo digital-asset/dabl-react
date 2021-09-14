@@ -19,7 +19,7 @@ See the [DA Marketplace](https://github.com/digital-asset/da-marketplace) app as
 
 Any app that runs on Daml Hub needs to authenticate to the ledger. Authentication is done via stateless access tokens that are signed and distributed by Daml Hub, provided in the JSON Web Token format. These tokens expire every 24 hours.
 
-Typical authentication involves forwarding the user through an interactive sign-in flow that redirects back to the application, with the user's access token made available to the app via the `DAMLHUB_LEDGER_ACCESS_TOKEN` cookie.
+Typically, authentication forwards the user through an interactive sign-in flow then redirects back to the application. The user's access token is then made available to the app via the `DAMLHUB_LEDGER_ACCESS_TOKEN` cookie.
 
 This library provides the `<DamlHubLogin .../>` component which handles the redirect flow and cookie extraction automatically. The only required prop is `onLogin`, which is a callback that gives the party's credentials after a successful login. If there were any errors with authentication, they are provided in the optional second argument of the callback.
 
@@ -42,7 +42,7 @@ The `credential` object returned in the callback is an instance of the `PartyTok
 
 For development purposes, it may be wise to test the application with multiple different parties with different roles. In this case, it is possible to specify alternate login methods. There are three methods altogether, with short-form props that can be used to enable them in a mix-and-match fashion:
 
-1. `withButton`: Button login. This is the default if no login method props are given. It is the interactive user login flow as described above, for production applications. Note that if either of the two other method props are supplied, the button is then disabled unless `withButton` is explicitly given alongside them.
+1. `withButton`: The primary simple button login, recommended for production applications. Upon clicking, the user is taken through interactive user login flow as described above, for production applications. The login button is used by default if no other props are given. Note that if either of the two other method props are supplied, the button is not displayed unless the `withButton` prop is also supplied.
 
 2. `withFile`: Login with a `parties.json` file. This is a file containing a list of all the parties (and associated ledger access tokens) that you've created under your Daml Hub account for the ledger. It can be downloaded from Daml Hub.
 
@@ -65,7 +65,7 @@ When using this prop, the extra prop `onPartiesLoad` must be supplied as a callb
 />
 ```
 
-3. `withToken`: Type or paste in a JWT token string directly in a form input, which is then passed back to the app as an `PartyToken` instance.
+3. `withToken`: Allow the user to type or paste in an encoded JWT token string directly in a form input, which is then passed back to your app as an instance of `PartyToken`.
 
 ```tsx
 // Enabling all three login methods

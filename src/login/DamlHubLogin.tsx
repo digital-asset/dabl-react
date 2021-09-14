@@ -1,4 +1,5 @@
 import React from 'react';
+import log from '../log';
 
 import { PartyToken } from '../party-token/PartyToken';
 import { deleteCookie, detectAppDomainType, DomainType, getCookieValue } from '../utils';
@@ -187,7 +188,7 @@ const FileLogin: React.FC<Omit<DamlHubLoginProps, 'onLogin'>> = props => {
   );
 
   if (showFile && !onPartiesLoad) {
-    console.warn('WARNING: <DamlHubLogin> supplied with `withParties`, but not `onPartiesLoad`');
+    log('login').warn('<DamlHubLogin> supplied with `withParties`, but not `onPartiesLoad`');
   }
 
   if (showFile && onPartiesLoad) {
