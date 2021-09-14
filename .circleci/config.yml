@@ -59,7 +59,7 @@ workflows:
             - npm-automation
           filters:
             tags:
-              only: /^v.*rc*/
+              only: /^v.*rc.*/
             branches:
               ignore: /.*/
       - test_build_and_publish:
