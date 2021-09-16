@@ -3,6 +3,7 @@
 set -euo pipefail
 
 GIT_TAG=$(git tag --contains)
+GIT_TAG="v1.0.0-rc.1"
 RELEASE_TAG="latest"
 
 if [[ "$GIT_TAG" = "" ]]

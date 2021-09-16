@@ -25,7 +25,7 @@ jobs:
     steps:
       - test_steps
       - run:
-          command: ./publish.sh
+          command: .circleci/publish.sh
 
   test_build_and_publish:
     executor:
