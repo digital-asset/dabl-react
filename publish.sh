@@ -6,9 +6,11 @@ GIT_TAG=$(git tag --contains)
 GIT_TAG=v1.0.0-rc.1
 RELEASE_TAG="latest"
 
+echo "Found git tag $GIT_TAG..."
+
 if [[ $GIT_TAG =~ ^v.*rc.* ]]
 then
-    $RELEASE_TAG="prerelease"
+    RELEASE_TAG="prerelease"
 fi
 
 echo "Publishing as $RELEASE_TAG..."
