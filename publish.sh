@@ -5,7 +5,7 @@ set -euo pipefail
 GIT_TAG=$(git tag --contains)
 RELEASE_TAG="latest"
 
-if [[ $GIT_TAG -n ]]
+if [[ -n $GIT_TAG ]]
 then
     echo "No git tag found! Aborting..."
     exit 1
