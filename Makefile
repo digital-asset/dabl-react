@@ -1,6 +1,6 @@
+GIT_TAG := $(shell git tag --contains)
+RELEASE_TAG := $(shell [[ $(GIT_TAG) =~ ^.*rc.* ]] && echo 'prerelease' || echo 'latest')
 
-build:
-	yarn install && yarn build
-	mkdir -p lib
-	sed  's|"lib/index.js"|"index.js":|g' package.json > lib/package.json
-	rm -rf node_modules/
+.PHONY: publish
+publish:
+	npm publish --access public --tag $(RELEASE_TAG)
