@@ -10,4 +10,5 @@ then
     $RELEASE_TAG="prerelease"
 fi
 
+echo "Publishing as $RELEASE_TAG..."
 npm publish --access public --tag $RELEASE_TAG --dry-run
