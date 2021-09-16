@@ -25,7 +25,7 @@ jobs:
     steps:
       - test_steps
       - run:
-          command: make publish
+          command: ./publish.sh
 
   test_build_and_publish:
     executor:
