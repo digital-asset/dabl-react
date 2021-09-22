@@ -1,8 +1,15 @@
 import React from 'react';
+
 import log from '../log';
+import {
+  deleteCookie,
+  detectAppDomainType,
+  damlHubEnvironment,
+  DomainType,
+  getCookieValue,
+} from '../utils';
 
 import { PartyToken } from '../party-token/PartyToken';
-import { deleteCookie, detectAppDomainType, DomainType, getCookieValue } from '../utils';
 
 import { PartiesInput } from './PartiesInput';
 
@@ -126,12 +133,32 @@ const ButtonLogin: React.FC<DamlHubLoginProps> = props => {
     const DABL_LEDGER_ACCESS_TOKEN = getCookieValue('DABL_LEDGER_ACCESS_TOKEN');
     const tokenFromCookie = DAMLHUB_LEDGER_ACCESS_TOKEN || DABL_LEDGER_ACCESS_TOKEN;
 
+    log('button-login:effect').info(
+      !!tokenFromCookie
+        ? `Found token in browser cookie: ${tokenFromCookie}`
+        : 'No cookie found - user has not authenticated'
+    );
+
+    const hubEnv = damlHubEnvironment();
+    const ledgerId = hubEnv?.ledgerId;
+
     if (tokenFromCookie) {
       try {
         const at = new PartyToken(tokenFromCookie);
-        onLogin && onLogin(at);
-      } catch (err) {
-        onLogin && onLogin(undefined, err);
+        if (
+          !!ledgerId &&
+          ledgerId !== at.ledgerId &&
+          detectAppDomainType() === DomainType.LEGACY_DOMAIN
+        ) {
+          log('button-login:effect').warn(
+            `Token's ledger ID (${at.ledgerId}) does not match the current running ledger's ID of ${ledgerId}. Deleting cookies...`
+          );
+          damlHubLogout();
+        } else {
+          onLogin && onLogin(at);
+        }
+      } catch (error) {
+        onLogin && onLogin(undefined, JSON.stringify(error));
       }
     }
   }, [window.location]);
@@ -141,6 +168,12 @@ const ButtonLogin: React.FC<DamlHubLoginProps> = props => {
     const legacyCookieToken = getCookieValue(DABL_LEDGER_ACCESS_TOKEN);
 
     const tokenFromCookie = damlHubCookieToken || legacyCookieToken;
+
+    log('button-login:click-handler').info(
+      !!tokenFromCookie
+        ? `Found token in browser cookie: ${tokenFromCookie}`
+        : 'No cookie found - user has not authenticated'
+    );
 
     if (!tokenFromCookie) {
       if (detectAppDomainType() === DomainType.APP_DOMAIN) {
@@ -233,8 +266,8 @@ const TokenLogin: React.FC<DamlHubLoginProps> = props => {
     try {
       const at = new PartyToken(jwtInput);
       onLogin && onLogin(at);
-    } catch (err) {
-      onLogin && onLogin(undefined, err);
+    } catch (error) {
+      onLogin && onLogin(undefined, JSON.stringify(error));
     }
   };
 

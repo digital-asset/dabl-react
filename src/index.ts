@@ -15,7 +15,7 @@ export { DefaultParties } from './default-parties/defaultParties';
 
 export { Automation, Instance } from './automation/automation';
 
-export { convertPartiesJson } from './login/PartiesInput';
+export { convertPartiesJson, InvalidPartiesError, PartiesInputErrors } from './login/PartiesInput';
 export { DamlHubLogin, damlHubLogout } from './login/DamlHubLogin';
 
 export { isRunningOnHub, damlHubEnvironment } from './utils';

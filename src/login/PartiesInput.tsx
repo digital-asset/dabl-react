@@ -22,7 +22,10 @@ const partyDetailsDecoder: Decoder<PartyDetails> = object({
 
 const partiesJsonDecoder: Decoder<PartyDetails[]> = array(partyDetailsDecoder);
 
-enum PartyErrors {
+/**
+ * A set of different possible errors that could occur during parties.json validation
+ */
+export enum PartiesInputErrors {
   InvalidPartiesError,
   InvalidPartyDetailError,
   LedgerMismatchError,
@@ -31,19 +34,24 @@ enum PartyErrors {
   EmptyPartiesList,
 }
 
-class InvalidPartiesError extends Error {
-  type: PartyErrors;
+/**
+ * A custom error class to contain PartiesInputErrors
+ */
+export class InvalidPartiesError extends Error {
+  type: PartiesInputErrors;
 
-  constructor(message: string, type: PartyErrors) {
+  constructor(message: string, type: PartiesInputErrors) {
     super(message);
     this.type = type;
+    this.name = 'InvalidPartiesError';
+    Object.setPrototypeOf(this, InvalidPartiesError.prototype);
   }
 }
 
 function validateParties(parties: PartyDetails[], publicPartyId: string): void {
   // No parties supplied
   if (parties.length === 0) {
-    throw new InvalidPartiesError('Empty parties list', PartyErrors.EmptyPartiesList);
+    throw new InvalidPartiesError('Empty parties list', PartiesInputErrors.EmptyPartiesList);
   }
 
   // True if any ledgerIds do not match the app's deployed ledger Id
@@ -52,8 +60,14 @@ function validateParties(parties: PartyDetails[], publicPartyId: string): void {
   if (!givenPublicParty) {
     throw new InvalidPartiesError(
       'Public party missing in parties.json',
-      PartyErrors.MissingPublicParty
+      PartiesInputErrors.MissingPublicParty
     );
+  }
+
+  if (givenPublicParty.party !== publicPartyId) {
+    const errMessage = `Your parties.json file might be for a different ledger! File uses public party ${givenPublicParty.party} but app's detected public party is ${publicPartyId}`;
+
+    throw new InvalidPartiesError(errMessage, PartiesInputErrors.LedgerMismatchError);
   }
 
   // True if any token is expired
@@ -62,16 +76,10 @@ function validateParties(parties: PartyDetails[], publicPartyId: string): void {
     false
   );
 
-  if (givenPublicParty.party !== publicPartyId) {
-    const errMessage = `Your parties.json file might be for a different ledger! File uses public party ${givenPublicParty.party} but app's detected public party is ${publicPartyId}`;
-
-    throw new InvalidPartiesError(errMessage, PartyErrors.LedgerMismatchError);
-  }
-
   if (invalidTokens) {
     throw new InvalidPartiesError(
       'Your parties.json file contains expired tokens!',
-      PartyErrors.ExpiredTokenError
+      PartiesInputErrors.ExpiredTokenError
     );
   }
 }
@@ -88,7 +96,7 @@ export function convertPartiesJson(
     log('parties-input').error('ERROR: ' + JSON.stringify(parties.error));
     throw new InvalidPartiesError(
       'Format does not look like parties.json',
-      PartyErrors.InvalidPartyDetailError
+      PartiesInputErrors.InvalidPartyDetailError
     );
   }
 
@@ -125,11 +133,17 @@ export const PartiesInput = ({
           }
         });
       } catch (error) {
-        if (error?.type === PartyErrors.EmptyPartiesList) {
-          log('parties-input').warn('Attempted to load an empty parties.json');
+        if (error instanceof InvalidPartiesError) {
+          if (error?.type === PartiesInputErrors.EmptyPartiesList) {
+            log('parties-input').warn('Attempted to load an empty parties.json');
+          } else {
+            setParties([]);
+            setError(error.message);
+          }
         } else {
-          setParties([]);
-          setError(error.message);
+          log('parties-input').error(`An unknown error occurred: ${JSON.stringify(error)}`);
+          setError(JSON.stringify(error));
+          throw error;
         }
       }
     },
