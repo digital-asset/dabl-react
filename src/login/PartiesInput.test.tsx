@@ -1,9 +1,9 @@
-import React from 'react';
 import { sign } from 'jsonwebtoken';
-import { create, act } from 'react-test-renderer';
+import React from 'react';
+import { act, create } from 'react-test-renderer';
 
-import { convertPartiesJson, PartiesInput } from './PartiesInput';
 import { delay } from '../utils';
+import { convertPartiesJson, PartiesInput } from './PartiesInput';
 
 const ledgerId = 'ledger-id-xyz';
 const publicPartyId = 'public-id-xyz';

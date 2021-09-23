@@ -1,10 +1,12 @@
 import React from 'react';
-import { Decoder, array, object, string } from '@mojotech/json-type-validation';
+
+import { array, Decoder, object, string } from '@mojotech/json-type-validation';
 
 import { fetchDefaultParties } from '../default-parties/defaultParties';
 import { PartyToken } from '../party-token/PartyToken';
-import { asyncFileReader } from '../utils';
+
 import log from '../log';
+import { asyncFileReader } from '../utils';
 
 type PartyDetails = {
   ledgerId: string;

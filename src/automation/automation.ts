@@ -1,8 +1,8 @@
 import {
-  Decoder,
   array,
   boolean,
   constant,
+  Decoder,
   object,
   oneOf,
   optional,

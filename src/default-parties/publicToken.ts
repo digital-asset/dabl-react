@@ -1,6 +1,6 @@
 import { Decoder, object, string } from '@mojotech/json-type-validation';
-import log from '../log';
 
+import log from '../log';
 import { detectAppDomainType, DomainType } from '../utils';
 
 interface PublicTokenResponse {

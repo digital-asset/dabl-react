@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "@testing-library/react-hooks": "^5.0.3",
+    "@trivago/prettier-plugin-sort-imports": "^2.0.4",
     "@types/jest": "^24.0.23",
     "@types/jsonwebtoken": "^8.5.0",
     "@types/node": "^14.0.14",
@@ -72,6 +73,12 @@
   "prettier": {
     "printWidth": 100,
     "singleQuote": true,
-    "arrowParens": "avoid"
+    "arrowParens": "avoid",
+    "importOrder": [
+      "^@.*",
+      "^.*/.*/",
+      "^.*/"
+    ],
+    "importOrderSeparation": true
   }
 }
