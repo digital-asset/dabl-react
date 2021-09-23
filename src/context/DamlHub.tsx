@@ -1,18 +1,16 @@
-import React, { createContext } from 'react';
-
-import { usePolling } from '../utils';
-import { PartyToken } from '../party-token/PartyToken';
-import { fetchPublicToken } from '../default-parties/publicToken';
-import { DefaultParties, fetchDefaultParties } from '../default-parties/defaultParties';
 import {
   deleteInstance,
   deployAutomation,
   listAutomationInstances,
   listPublishedAutomations,
-  Automation,
-  Instance,
   undeployAutomation,
 } from '../automation/automation';
+import { Automation, Instance } from '../automation/schemas';
+import { DefaultParties, fetchDefaultParties } from '../default-parties/defaultParties';
+import { fetchPublicToken } from '../default-parties/publicToken';
+import { PartyToken } from '../party-token/PartyToken';
+import { usePolling } from '../utils';
+import React, { createContext } from 'react';
 
 const DEFAULT_POLL_INTERVAL = 5000; // 5 seconds
 
