@@ -1,20 +1,17 @@
-import { Decoder, constant, object } from '@mojotech/json-type-validation';
-
 import log from '../log';
-
 import {
   Automation,
   publicAutomationListDecoder,
   Instance,
   instanceDecoder,
   instanceListDecoder,
+  SuccessResponse,
+  successResponseDecoder,
 } from './schemas';
 
 /** ======================== List Public Automations ======================== */
 
-export const listPublishedAutomations = async (
-  publicToken: string
-): Promise<Automation[] | null> => {
+export const listPublishedAutomations = async (publicToken: string): Promise<Automation[]> => {
   const headers = {
     Authorization: `Bearer ${publicToken}`,
     'Content-Type': 'application/json',
@@ -34,7 +31,7 @@ export const listPublishedAutomations = async (
 
 /** ======================== List Automation Instances ======================== */
 
-export const listAutomationInstances = async (token: string): Promise<Instance[] | null> => {
+export const listAutomationInstances = async (token: string): Promise<Instance[]> => {
   const headers = {
     Authorization: `Bearer ${token}`,
     'Content-Type': 'application/json',
@@ -59,7 +56,7 @@ export const deployAutomation = async (
   automations: Automation[],
   artifactHash: string,
   trigger?: string
-): Promise<Instance | null> => {
+): Promise<Instance> => {
   try {
     const artifact = automations?.find(a => a.artifactHash === artifactHash);
     if (artifact) {
@@ -92,14 +89,6 @@ export const deployAutomation = async (
 
 /** ==================== Deleting an Automation Instances ==================== */
 
-interface SuccessResponse {
-  result: 'success';
-}
-
-const successResponse: Decoder<SuccessResponse> = object({
-  result: constant('success'),
-});
-
 export const deleteInstance = async (
   token: string,
   instanceId: string,
@@ -118,7 +107,7 @@ export const deleteInstance = async (
 
     const json = await response.json();
 
-    return successResponse.runWithException(json);
+    return successResponseDecoder.runWithException(json);
   } catch (error) {
     log('automation').error(
       `Error attempting to delete an automation instance: ${JSON.stringify(error)}`
@@ -144,7 +133,7 @@ export const undeployAutomation = async (
     const response = await fetch(url, { method: 'POST', headers });
     const json = await response.json();
 
-    return successResponse.runWithException(json);
+    return successResponseDecoder.runWithException(json);
   } catch (error) {
     log('automation').error(
       `Error attempting to delete an automation instance: ${JSON.stringify(error)}`

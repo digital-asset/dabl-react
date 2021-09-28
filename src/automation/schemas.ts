@@ -158,7 +158,10 @@ export type Instance = {
   entityInfo: {
     apiVersion: string;
     artifactHash: string;
-    entity: DamlTrigger | LedgerBot | Integration;
+    entity: {
+      tag: 'Automation';
+      value: DamlTrigger | LedgerBot | Integration;
+    };
   };
   enabled: boolean;
   deployer: string;
@@ -174,7 +177,10 @@ export const instanceDecoder: Decoder<Instance> = object({
   entityInfo: object({
     apiVersion: string(),
     artifactHash: string(),
-    entity: union(damlTriggerDecoder, ledgerBotDecoder, integrationDecoder),
+    entity: object({
+      tag: constant('Automation'),
+      value: union(damlTriggerDecoder, ledgerBotDecoder, integrationDecoder),
+    }),
   }),
   enabled: boolean(),
   deployer: string(),
@@ -186,3 +192,11 @@ export const instanceDecoder: Decoder<Instance> = object({
 });
 
 export const instanceListDecoder: Decoder<Instance[]> = array(instanceDecoder);
+
+export interface SuccessResponse {
+  result: 'success';
+}
+
+export const successResponseDecoder: Decoder<SuccessResponse> = object({
+  result: constant('success'),
+});
