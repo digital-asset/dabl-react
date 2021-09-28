@@ -1,18 +1,18 @@
 import { DamlHub } from './context/DamlHub';
 
-export { Automation, Instance } from './automation/automation';
 export {
   useAdminParty,
-  useAutomationInstances,
-  useAutomations,
   useDefaultParties,
   usePublicParty,
   usePublicToken,
 } from './context/DamlHub';
 export { DefaultParties } from './default-parties/defaultParties';
-export { fetchPublicToken } from './default-parties/publicToken';
-export { DamlHubLogin, damlHubLogout } from './login/DamlHubLogin';
+
+export { Automation, Instance } from './automation/schemas';
+export { useAutomations, useAutomationInstances } from './automation/context';
+
 export { convertPartiesJson, InvalidPartiesError, PartiesInputErrors } from './login/PartiesInput';
+export { DamlHubLogin, damlHubLogout } from './login/DamlHubLogin';
 export { PartyToken } from './party-token/PartyToken';
 
 export { damlHubEnvironment, isRunningOnHub } from './utils';
