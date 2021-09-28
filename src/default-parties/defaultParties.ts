@@ -1,12 +1,13 @@
 import {
-  Decoder,
   array,
   boolean,
+  Decoder,
   number,
   object,
-  string,
   optional,
+  string,
 } from '@mojotech/json-type-validation';
+
 import log from '../log';
 import { detectAppDomainType, DomainType } from '../utils';
 

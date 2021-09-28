@@ -1,3 +1,5 @@
+import React, { createContext } from 'react';
+
 import {
   deleteInstance,
   deployAutomation,
@@ -7,8 +9,8 @@ import {
 } from '../automation/automation';
 import { Automation, Instance, SuccessResponse } from '../automation/schemas';
 import { PartyToken } from '../party-token/PartyToken';
+
 import { usePolling } from '../utils';
-import React, { createContext } from 'react';
 
 interface AutomationsCtx {
   automations?: Automation[];

@@ -1,4 +1,5 @@
 import { decode } from 'jsonwebtoken';
+
 import { array, Decoder, number, object, string } from '@mojotech/json-type-validation';
 
 interface PartyTokenPayload {

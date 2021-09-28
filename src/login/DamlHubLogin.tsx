@@ -1,16 +1,15 @@
 import React from 'react';
 
+import { PartyToken } from '../party-token/PartyToken';
+
 import log from '../log';
 import {
+  damlHubEnvironment,
   deleteCookie,
   detectAppDomainType,
-  damlHubEnvironment,
   DomainType,
   getCookieValue,
 } from '../utils';
-
-import { PartyToken } from '../party-token/PartyToken';
-
 import { PartiesInput } from './PartiesInput';
 
 const DABL_LEDGER_ACCESS_TOKEN = 'DABL_LEDGER_ACCESS_TOKEN';

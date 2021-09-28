@@ -1,9 +1,9 @@
 import {
+  LFService,
+  LoggerFactory,
   LoggerFactoryOptions,
   LogGroupRule,
   LogLevel,
-  LoggerFactory,
-  LFService,
 } from 'typescript-logging';
 
 const logPrefix = 'damlhub-react';

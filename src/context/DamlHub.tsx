@@ -1,9 +1,11 @@
+import React, { createContext } from 'react';
+
 import { AutomationsProvider } from '../automation/context';
 import { DefaultParties, fetchDefaultParties } from '../default-parties/defaultParties';
 import { fetchPublicToken } from '../default-parties/publicToken';
 import { PartyToken } from '../party-token/PartyToken';
+
 import { usePolling, isRunningOnHub } from '../utils';
-import React, { createContext } from 'react';
 
 const DEFAULT_POLL_INTERVAL = 5000; // 5 seconds
 
