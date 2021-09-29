@@ -58,6 +58,7 @@ type DamlHubLoginProps =
       withButton?: boolean;
       withToken?: boolean;
       withFile: boolean;
+      partiesJson?: string;
       onLogin?: (credentials?: PartyToken, err?: string) => void;
       onPartiesLoad: (parties?: PartyToken[], err?: string) => void;
     }
@@ -72,6 +73,7 @@ type DamlHubLoginProps =
       withButton?: boolean;
       withToken?: boolean;
       withFile?: boolean;
+      partiesJson?: string;
       onLogin?: (credentials?: PartyToken, err?: string) => void;
       onPartiesLoad: (parties?: PartyToken[], err?: string) => void;
     }
@@ -80,6 +82,7 @@ type DamlHubLoginProps =
       withButton?: boolean;
       withToken?: boolean;
       withFile?: boolean;
+      partiesJson?: string;
       onLogin: (credentials?: PartyToken, err?: string) => void;
       onPartiesLoad?: (parties?: PartyToken[], err?: string) => void;
     };
@@ -210,7 +213,7 @@ const ButtonLogin: React.FC<DamlHubLoginProps> = props => {
 
 const FileLogin: React.FC<Omit<DamlHubLoginProps, 'onLogin'>> = props => {
   const { file: showFile, button: showButton } = normalizeDisplayOpt(props);
-  const { options, onPartiesLoad } = props;
+  const { options, onPartiesLoad, partiesJson } = props;
 
   let text = options?.method?.file?.text || (
     <span>
@@ -228,6 +231,7 @@ const FileLogin: React.FC<Omit<DamlHubLoginProps, 'onLogin'>> = props => {
       <React.Fragment key="damlhub-login-parties-input">
         {showButton && <p>{text}</p>}
         <PartiesInput
+          partiesJson={partiesJson}
           onPartiesLoad={(creds, err) => {
             onPartiesLoad(creds, err);
           }}
