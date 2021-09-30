@@ -20,13 +20,13 @@ interface AutomationEntity<Tag extends EntityTag, Value> {
   tag: Tag;
   value: {
     entityName: string;
-    metadata: {};
   } & Value;
 }
 
 type DamlTrigger = AutomationEntity<
   EntityTag.DamlTrigger,
   {
+    metadata: {};
     packageIds: string[];
     sdkVersion: string;
     triggerNames: string[];
@@ -44,7 +44,7 @@ const damlTriggerDecoder: Decoder<DamlTrigger> = object({
   }),
 });
 
-type LedgerBot = AutomationEntity<EntityTag.LedgerBot, { runtime: string }>;
+type LedgerBot = AutomationEntity<EntityTag.LedgerBot, { metadata: {}; runtime: string }>;
 
 const ledgerBotDecoder: Decoder<LedgerBot> = object({
   tag: constant(EntityTag.LedgerBot),
@@ -99,7 +99,6 @@ const integrationDecoder: Decoder<Integration> = object({
   tag: constant(EntityTag.Integration),
   value: object({
     entityName: string(),
-    metadata: constant({}),
     artifactHash: optional(string()),
     typeName: string(),
     description: string(),
