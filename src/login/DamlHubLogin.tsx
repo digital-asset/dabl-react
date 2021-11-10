@@ -182,7 +182,8 @@ const ButtonLogin: React.FC<DamlHubLoginProps> = props => {
         window.location.assign(`/.hub/v1/auth/login`);
       } else {
         const ledgerId = window.location.hostname.split('.')[0];
-        window.location.assign(`https://login.projectdabl.com/auth/login?ledgerId=${ledgerId}`);
+        const hostname = damlHubEnvironment()?.hostname || 'projectdabl.com';
+        window.location.assign(`https://login.${hostname}/auth/login?ledgerId=${ledgerId}`);
       }
     } else {
       onLogin && onLogin(new PartyToken(tokenFromCookie));
