@@ -29,9 +29,11 @@ interface LoginOptions {
 }
 
 export const damlHubLogout = (): void => {
+  const hostname = damlHubEnvironment()?.hostname || 'projectdabl.com';
+
   if (detectAppDomainType() === DomainType.LEGACY_DOMAIN) {
-    deleteCookie(DABL_LEDGER_ACCESS_TOKEN, 'projectdabl.com');
-    deleteCookie(DAMLHUB_LEDGER_ACCESS_TOKEN, 'projectdabl.com');
+    deleteCookie(DABL_LEDGER_ACCESS_TOKEN, hostname);
+    deleteCookie(DAMLHUB_LEDGER_ACCESS_TOKEN, hostname);
   } else if (detectAppDomainType() === DomainType.APP_DOMAIN) {
     deleteCookie(DAMLHUB_LEDGER_ACCESS_TOKEN);
   }
