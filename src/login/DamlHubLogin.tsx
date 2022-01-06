@@ -147,6 +147,12 @@ const ButtonLogin: React.FC<DamlHubLoginProps> = props => {
     const ledgerId = hubEnv?.ledgerId;
 
     if (tokenFromCookie) {
+      if (detectAppDomainType() === DomainType.LEGACY_DOMAIN) {
+        const url = new URL(window.location.toString());
+        url.search = '';
+        window.history.replaceState(window.history.state, '', url.toString());
+      }
+
       try {
         const at = new PartyToken(tokenFromCookie);
         if (
