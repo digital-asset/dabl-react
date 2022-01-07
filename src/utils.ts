@@ -12,13 +12,13 @@ export const detectAppDomainType = (): DomainType => {
   const { hostname: hn } = window.location;
 
   if (hn.includes('projectdabl') && hn.includes('.com')) {
-    log('domain').info('App running on legacy projectdabl.com domain');
+    log('domain').debug('App running on legacy projectdabl.com domain');
     return DomainType.LEGACY_DOMAIN;
   } else if (hn.includes('daml') && hn.includes('.app')) {
-    log('domain').info('App running on daml.app domain');
+    log('domain').debug('App running on daml.app domain');
     return DomainType.APP_DOMAIN;
   } else {
-    log('domain').warn('App UI does not seem to be running on Daml Hub');
+    log('domain').debug('App UI does not seem to be running on Daml Hub');
     return DomainType.NON_HUB_DOMAIN;
   }
 };
@@ -115,7 +115,7 @@ export const asyncFileReader = (file: File): Promise<string> => {
 export const usePolling = (fn: () => Promise<void>, interval: number) => {
   React.useEffect(() => {
     if (!isRunningOnHub()) {
-      log('polling').warn('Disabling polling, app is not running on Daml Hub');
+      log('polling').debug('Disabling polling, app is not running on Daml Hub');
       return () => {};
     } else if (interval > 0) {
       let intervalID = setInterval(fn, interval);
