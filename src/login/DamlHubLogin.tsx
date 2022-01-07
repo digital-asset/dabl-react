@@ -139,7 +139,7 @@ const ButtonLogin: React.FC<DamlHubLoginProps> = props => {
 
     log('button-login:effect').info(
       !!tokenFromCookie
-        ? `Found token in browser cookie: ${tokenFromCookie}`
+        ? `Found token in browser cookie`
         : 'No cookie found - user has not authenticated'
     );
 
@@ -181,7 +181,7 @@ const ButtonLogin: React.FC<DamlHubLoginProps> = props => {
 
     log('button-login:click-handler').info(
       !!tokenFromCookie
-        ? `Found token in browser cookie: ${tokenFromCookie}`
+        ? `Found token in browser cookie`
         : 'No cookie found - user has not authenticated'
     );
 

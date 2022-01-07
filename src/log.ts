@@ -1,18 +1,27 @@
-import {
-  LFService,
-  LoggerFactory,
-  LoggerFactoryOptions,
-  LogGroupRule,
-  LogLevel,
-} from 'typescript-logging';
+type LogLevel = 'log' | 'info' | 'debug' | 'warn' | 'error';
 
-const logPrefix = 'damlhub-react';
+function prefixLog(name: string, logLevel: LogLevel) {
+  return `${logLevel.toUpperCase()} [damlhub-react:${name}]`;
+}
 
-const options = new LoggerFactoryOptions();
-options.addLogGroupRule(new LogGroupRule(new RegExp(`${logPrefix}.+`), LogLevel.Info));
-
-const factory: LoggerFactory = LFService.createNamedLoggerFactory('LoggerFactory', options);
+type LogData = (string | number | object)[];
 
 export default (name: string) => {
-  return factory.getLogger(`${logPrefix}:${name}`);
+  return {
+    debug: (...data: LogData) => {
+      console.debug(prefixLog(name, 'debug'), ...data);
+    },
+    log: (...data: LogData) => {
+      console.log(prefixLog(name, 'log'), ...data);
+    },
+    info: (...data: LogData) => {
+      console.info(prefixLog(name, 'info'), ...data);
+    },
+    warn: (...data: LogData) => {
+      console.warn(prefixLog(name, 'warn'), ...data);
+    },
+    error: (...data: LogData) => {
+      console.error(prefixLog(name, 'error'), ...data);
+    },
+  };
 };
