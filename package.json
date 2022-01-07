@@ -1,6 +1,6 @@
 {
   "name": "@daml/hub-react",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Daml React functions for Daml Hub",
   "homepage": "https://hub.daml.com",
   "keywords": [
@@ -18,8 +18,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "@mojotech/json-type-validation": "^3.1.0",
-    "jsonwebtoken": "^8.5.1",
-    "typescript-logging": "^1.0.0"
+    "jsonwebtoken": "^8.5.1"
   },
   "repository": "github:digital-asset/dabl-react",
   "scripts": {
