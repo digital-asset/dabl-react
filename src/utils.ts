@@ -118,6 +118,7 @@ export const usePolling = (fn: () => Promise<void>, interval: number) => {
       log('polling').debug('Disabling polling, app is not running on Daml Hub');
       return () => {};
     } else if (interval > 0) {
+      fn();
       let intervalID = setInterval(fn, interval);
       return () => clearInterval(intervalID);
     } else {
