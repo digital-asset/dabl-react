@@ -4,6 +4,8 @@
 
 Copyright 2020 Digital Asset (Switzerland) GmbH and/or its affiliates. All Rights Reserved. SPDX-License-Identifier: Apache-2.0
 
+![npm](https://img.shields.io/npm/v/@daml/hub-react?color=red&label=npm)
+
 ## Documentation
 
 This library aims to complement [@daml/react](`https://www.npmjs.com/package/@daml/react),
