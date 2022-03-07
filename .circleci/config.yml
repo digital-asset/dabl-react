@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  node: circleci/node@3.0.0
+  node: circleci/node@5.0.0
 
 commands:
   test_steps:
@@ -9,30 +9,37 @@ commands:
       - node/install-packages:
           pkg-manager: yarn
       - run:
-          command: yarn install
           name: Install dependencies
+          command: yarn install
       - run:
+          name: Run unit tests (Jest)
           command: yarn test
-          name: Run tests via yarn
       - run:
-          command: yarn format-check
           name: Check formatting
+          command: yarn format-check
 
+  build_steps:
+    steps:
+      - run:
+          name: Compile TS to JS
+          command: yarn build
+      - run:
+          name: Run build integration test
+          command: ./build_integration_test.sh
 jobs:
   test:
     executor:
       name: node/default
     steps:
       - test_steps
+      - build_steps
 
   test_build_and_publish:
     executor:
       name: node/default
     steps:
       - test_steps
-      - run:
-          name: Compile TS to JS
-          command: yarn build
+      - build_steps
       - run:
           name: Authenticate with registry
           command: echo "//registry.npmjs.org/:_authToken=$NPM_TOKEN" > .npmrc

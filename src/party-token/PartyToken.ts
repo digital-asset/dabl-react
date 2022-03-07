@@ -1,4 +1,4 @@
-import { decode } from 'jsonwebtoken';
+import decodeJwt from 'jwt-decode';
 
 import { array, Decoder, number, object, string } from '@mojotech/json-type-validation';
 
@@ -40,13 +40,12 @@ export class PartyToken {
   constructor(token: string) {
     this.token = token;
 
-    const decoded = partyTokenDecoder.run(decode(token));
-
-    if (decoded.ok) {
-      this.payload = decoded.result;
-    } else {
+    try {
+      const decoded = partyTokenDecoder.runWithException(decodeJwt(token));
+      this.payload = decoded;
+    } catch (err) {
       throw new Error(`Access token not in Daml Hub format: ${token}.\n
-      \t${decoded.error.message}`);
+      \t${err}`);
     }
   }
 
