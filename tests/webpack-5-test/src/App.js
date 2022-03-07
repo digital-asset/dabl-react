@@ -1,13 +1,9 @@
-import logo from './logo.svg';
-import './App.css';
-
 import DamlHub, { DamlHubLogin } from '@daml/hub-react';
 
 function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <DamlHubLogin onLogin={(creds, error) => {
           if (!creds) {
             console.log("Something went wrong: ", error);
@@ -15,7 +11,7 @@ function App() {
             console.log("User credentials: ", creds);
           }
         }} />
-{/*
+
         <DamlHub>
           <p>
             Edit <code>src/App.js</code> and save to reload.
@@ -28,7 +24,7 @@ function App() {
           >
             Learn React
           </a>
-        </DamlHub> */}
+        </DamlHub>
       </header>
     </div>
   );
