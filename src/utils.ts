@@ -5,6 +5,7 @@ import log from './log';
 export enum DomainType {
   APP_DOMAIN,
   LEGACY_DOMAIN,
+  LOCALHOST,
   NON_HUB_DOMAIN,
 }
 
@@ -17,6 +18,9 @@ export const detectAppDomainType = (): DomainType => {
   } else if (hn.includes('daml') && hn.includes('.app')) {
     log('domain').debug('App running on daml.app domain');
     return DomainType.APP_DOMAIN;
+  } else if (hn.includes('localhost')) {
+    log('domain').debug('App running on localhost');
+    return DomainType.LOCALHOST;
   } else {
     log('domain').debug('App UI does not seem to be running on Daml Hub');
     return DomainType.NON_HUB_DOMAIN;
@@ -78,7 +82,7 @@ const hubWsURL = (): string | undefined => {
  * @returns boolean
  */
 export const isRunningOnHub = (): boolean => {
-  return detectAppDomainType() !== DomainType.NON_HUB_DOMAIN;
+  return detectAppDomainType() !== DomainType.LOCALHOST;
 };
 
 export const deleteCookie = (name: string, domain?: string): void => {
