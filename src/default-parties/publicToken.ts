@@ -15,11 +15,6 @@ export async function fetchPublicToken(): Promise<string | null> {
   try {
     const { hostname: hn } = window.location;
     switch (detectAppDomainType()) {
-      case DomainType.APP_DOMAIN:
-        const app_response = await fetch(`//${hn}/.hub/v1/public/token`, { method: 'POST' });
-        const app_json = await app_response.json();
-        const app_public = publicTokenDecoder.runWithException(app_json);
-        return app_public.access_token;
       case DomainType.LEGACY_DOMAIN:
         const ledgerId = window.location.hostname.split('.')[0];
         const legacy_response = await fetch(
@@ -32,7 +27,10 @@ export async function fetchPublicToken(): Promise<string | null> {
         const legacy_public = publicTokenDecoder.runWithException(legacy_json);
         return legacy_public.access_token;
       default:
-        throw new Error('App not running on Daml Hub');
+        const app_response = await fetch(`//${hn}/.hub/v1/public/token`, { method: 'POST' });
+        const app_json = await app_response.json();
+        const app_public = publicTokenDecoder.runWithException(app_json);
+        return app_public.access_token;
     }
   } catch (error) {
     log('public-token').error(`Error fetching public party token: ${JSON.stringify(error)}`);

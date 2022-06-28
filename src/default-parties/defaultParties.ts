@@ -56,7 +56,12 @@ export async function fetchDefaultParties(): Promise<DefaultParties> {
   try {
     const { hostname: hn } = window.location;
     switch (detectAppDomainType()) {
-      case DomainType.APP_DOMAIN:
+      case DomainType.LEGACY_DOMAIN:
+        const legacy_response = await fetch(`//${hn}/.well-known/dabl.json`);
+        const legacy_json = await legacy_response.json();
+        const legacy_parties = legacyAPIDecoder.runWithException(legacy_json);
+        return [legacy_parties.publicParty, legacy_parties.userAdminParty];
+      default:
         const app_response = await fetch(`//${hn}/.hub/v1/default-parties`);
         const app_json = await app_response.json();
         const app_parties = appAPIDecoder.runWithException(app_json);
@@ -64,13 +69,6 @@ export async function fetchDefaultParties(): Promise<DefaultParties> {
           getPartyIdByName(app_parties.result, PUBLIC_DISPLAY_NAME),
           getPartyIdByName(app_parties.result, USER_ADMIN_DISPLAY_NAME),
         ];
-      case DomainType.LEGACY_DOMAIN:
-        const legacy_response = await fetch(`//${hn}/.well-known/dabl.json`);
-        const legacy_json = await legacy_response.json();
-        const legacy_parties = legacyAPIDecoder.runWithException(legacy_json);
-        return [legacy_parties.publicParty, legacy_parties.userAdminParty];
-      default:
-        throw new Error('App not running on Daml Hub');
     }
   } catch (error) {
     log('default-parties').error(`Error determining well known parties ${JSON.stringify(error)}`);
