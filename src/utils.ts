@@ -54,7 +54,8 @@ export const damlHubEnvironment = ():
 };
 
 const hubBaseURL = (): string | undefined => {
-  if (detectAppDomainType() === DomainType.APP_DOMAIN) {
+  const domainType = detectAppDomainType();
+  if (domainType === DomainType.APP_DOMAIN || domainType === DomainType.NON_HUB_DOMAIN) {
     return `${window.location.origin}/`;
   } else if (detectAppDomainType() === DomainType.LEGACY_DOMAIN) {
     const ledgerId = window.location.hostname.split('.')[0];
@@ -66,7 +67,8 @@ const hubBaseURL = (): string | undefined => {
 };
 
 const hubWsURL = (): string | undefined => {
-  if (detectAppDomainType() === DomainType.APP_DOMAIN) {
+  const domainType = detectAppDomainType();
+  if (domainType === DomainType.APP_DOMAIN || domainType === DomainType.NON_HUB_DOMAIN) {
     return `wss://${window.location.hostname}/`;
   } else if (detectAppDomainType() === DomainType.LEGACY_DOMAIN) {
     const ledgerId = window.location.hostname.split('.')[0];
