@@ -11,6 +11,8 @@ Copyright 2020 Digital Asset (Switzerland) GmbH and/or its affiliates. All Right
 This library aims to complement [@daml/react](`https://www.npmjs.com/package/@daml/react),
 to make it easier to write [React](https://reactjs.org/) applications on Daml Hub specifically.
 
+The @daml/hub-react library can only be used with user interfaces hosted on Daml Hub, it is not supported for local development.
+
 This library exports Typescript declarations, and should work in a Typescript project out of the box.
 
 See the [DA Marketplace](https://github.com/digital-asset/da-marketplace) app as a reference for more advanced usage of this library.
