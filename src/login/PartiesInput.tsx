@@ -57,7 +57,9 @@ function validateParties(parties: PartyDetails[], publicPartyId: string): void {
   }
 
   // True if any ledgerIds do not match the app's deployed ledger Id
-  const givenPublicParty = parties.find(p => p.party.includes('public-'));
+  const givenPublicParty = parties.find(
+    p => p.party.includes('public-') || p.party.includes('public::')
+  );
 
   if (!givenPublicParty) {
     throw new InvalidPartiesError(
