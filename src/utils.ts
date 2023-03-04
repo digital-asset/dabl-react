@@ -4,17 +4,13 @@ import log from './log';
 
 export enum DomainType {
   APP_DOMAIN,
-  LEGACY_DOMAIN,
   NON_HUB_DOMAIN,
 }
 
 export const detectAppDomainType = (): DomainType => {
   const { hostname: hn } = window.location;
 
-  if (hn.includes('projectdabl') && hn.includes('.com')) {
-    log('domain').debug('App running on legacy projectdabl.com domain');
-    return DomainType.LEGACY_DOMAIN;
-  } else if (hn.includes('daml') && hn.includes('.app')) {
+  if (hn.includes('daml') && hn.includes('.app')) {
     log('domain').debug('App running on daml.app domain');
     return DomainType.APP_DOMAIN;
   } else {
@@ -39,10 +35,7 @@ export const damlHubEnvironment = ():
     }
   | undefined => {
   const hostname = window.location.hostname.split('.').slice(1).join('.');
-  const ledgerId =
-    detectAppDomainType() === DomainType.LEGACY_DOMAIN
-      ? window.location.hostname.split('.')[0]
-      : undefined;
+  const ledgerId = undefined;
   const baseURL = hubBaseURL();
   const wsURL = hubWsURL();
 
@@ -50,27 +43,13 @@ export const damlHubEnvironment = ():
 };
 
 const hubBaseURL = (): string | undefined => {
-  if (detectAppDomainType() === DomainType.APP_DOMAIN) {
-    return `${window.location.origin}/`;
-  } else if (detectAppDomainType() === DomainType.LEGACY_DOMAIN) {
-    const ledgerId = window.location.hostname.split('.')[0];
-    const hubHostname = window.location.hostname.split('.').slice(1).join('.');
-    return `https://api.${hubHostname}/data/${ledgerId}/`;
-  } else {
-    return undefined;
-  }
+  return detectAppDomainType() === DomainType.APP_DOMAIN ? `${window.location.origin}/` : undefined;
 };
 
 const hubWsURL = (): string | undefined => {
-  if (detectAppDomainType() === DomainType.APP_DOMAIN) {
-    return `wss://${window.location.hostname}/`;
-  } else if (detectAppDomainType() === DomainType.LEGACY_DOMAIN) {
-    const ledgerId = window.location.hostname.split('.')[0];
-    const hubHostname = window.location.hostname.split('.').slice(1).join('.');
-    return `wss://api.${hubHostname}/data/${ledgerId}/`;
-  } else {
-    return undefined;
-  }
+  return detectAppDomainType() === DomainType.APP_DOMAIN
+    ? `wss://${window.location.hostname}/`
+    : undefined;
 };
 
 /**

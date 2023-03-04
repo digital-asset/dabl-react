@@ -1,12 +1,4 @@
-import {
-  array,
-  boolean,
-  Decoder,
-  number,
-  object,
-  optional,
-  string,
-} from '@mojotech/json-type-validation';
+import { array, boolean, Decoder, number, object, string } from '@mojotech/json-type-validation';
 
 import log from '../log';
 import { detectAppDomainType, DomainType } from '../utils';
@@ -19,16 +11,6 @@ interface PartyDetails {
   identifier: string;
   isLocal: boolean;
 }
-
-interface LegacyAPIResponse {
-  userAdminParty?: string;
-  publicParty: string;
-}
-
-const legacyAPIDecoder: Decoder<LegacyAPIResponse> = object({
-  userAdminParty: optional(string()),
-  publicParty: string(),
-});
 
 interface AppAPIResponse {
   result: PartyDetails[];
@@ -64,11 +46,6 @@ export async function fetchDefaultParties(): Promise<DefaultParties> {
           getPartyIdByName(app_parties.result, PUBLIC_DISPLAY_NAME),
           getPartyIdByName(app_parties.result, USER_ADMIN_DISPLAY_NAME),
         ];
-      case DomainType.LEGACY_DOMAIN:
-        const legacy_response = await fetch(`//${hn}/.well-known/dabl.json`);
-        const legacy_json = await legacy_response.json();
-        const legacy_parties = legacyAPIDecoder.runWithException(legacy_json);
-        return [legacy_parties.publicParty, legacy_parties.userAdminParty];
       default:
         throw new Error('App not running on Daml Hub');
     }
