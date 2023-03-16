@@ -46,7 +46,9 @@ export const damlHubEnvironment = ():
   return isRunningOnHub() ? { hostname, baseURL, wsURL, ledgerId } : undefined;
 };
 
-const hubBaseURL = (): string | undefined => { return `${window.location.origin}/` };
+const hubBaseURL = (): string | undefined => {
+  return `${window.location.origin}/`;
+};
 
 const hubWsURL = (): string | undefined => {
   const domainType = detectAppDomainType();
