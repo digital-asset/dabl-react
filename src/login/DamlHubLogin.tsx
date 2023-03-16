@@ -29,12 +29,7 @@ interface LoginOptions {
 }
 
 export const damlHubLogout = (): void => {
-  const hostname = damlHubEnvironment()?.hostname || 'projectdabl.com';
-
-  if (detectAppDomainType() === DomainType.LEGACY_DOMAIN) {
-    deleteCookie(DABL_LEDGER_ACCESS_TOKEN, hostname);
-    deleteCookie(DAMLHUB_LEDGER_ACCESS_TOKEN, hostname);
-  } else if (detectAppDomainType() === DomainType.APP_DOMAIN) {
+  if (detectAppDomainType() === DomainType.APP_DOMAIN) {
     deleteCookie(DAMLHUB_LEDGER_ACCESS_TOKEN);
   }
 };
@@ -143,30 +138,10 @@ const ButtonLogin: React.FC<DamlHubLoginProps> = props => {
         : 'No cookie found - user has not authenticated'
     );
 
-    const hubEnv = damlHubEnvironment();
-    const ledgerId = hubEnv?.ledgerId;
-
     if (tokenFromCookie) {
-      if (detectAppDomainType() === DomainType.LEGACY_DOMAIN) {
-        const url = new URL(window.location.toString());
-        url.search = '';
-        window.history.replaceState(window.history.state, '', url.toString());
-      }
-
       try {
         const at = new PartyToken(tokenFromCookie);
-        if (
-          !!ledgerId &&
-          ledgerId !== at.ledgerId &&
-          detectAppDomainType() === DomainType.LEGACY_DOMAIN
-        ) {
-          log('button-login:effect').warn(
-            `Token's ledger ID (${at.ledgerId}) does not match the current running ledger's ID of ${ledgerId}. Deleting cookies...`
-          );
-          damlHubLogout();
-        } else {
-          onLogin && onLogin(at);
-        }
+        onLogin && onLogin(at);
       } catch (error) {
         onLogin && onLogin(undefined, JSON.stringify(error));
       }

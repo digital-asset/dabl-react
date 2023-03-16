@@ -4,7 +4,6 @@ import log from './log';
 
 export enum DomainType {
   APP_DOMAIN,
-  LEGACY_DOMAIN,
   LOCALHOST,
   NON_HUB_DOMAIN,
 }
@@ -12,10 +11,7 @@ export enum DomainType {
 export const detectAppDomainType = (): DomainType => {
   const { hostname: hn } = window.location;
 
-  if (hn.includes('projectdabl') && hn.includes('.com')) {
-    log('domain').debug('App running on legacy projectdabl.com domain');
-    return DomainType.LEGACY_DOMAIN;
-  } else if (hn.includes('daml') && hn.includes('.app')) {
+  if (hn.includes('daml') && hn.includes('.app')) {
     log('domain').debug('App running on daml.app domain');
     return DomainType.APP_DOMAIN;
   } else if (hn.includes('localhost')) {
@@ -43,40 +39,20 @@ export const damlHubEnvironment = ():
     }
   | undefined => {
   const hostname = window.location.hostname.split('.').slice(1).join('.');
-  const ledgerId =
-    detectAppDomainType() === DomainType.LEGACY_DOMAIN
-      ? window.location.hostname.split('.')[0]
-      : undefined;
+  const ledgerId = undefined;
   const baseURL = hubBaseURL();
   const wsURL = hubWsURL();
 
   return isRunningOnHub() ? { hostname, baseURL, wsURL, ledgerId } : undefined;
 };
 
-const hubBaseURL = (): string | undefined => {
-  const domainType = detectAppDomainType();
-  if (domainType === DomainType.APP_DOMAIN || domainType === DomainType.NON_HUB_DOMAIN) {
-    return `${window.location.origin}/`;
-  } else if (detectAppDomainType() === DomainType.LEGACY_DOMAIN) {
-    const ledgerId = window.location.hostname.split('.')[0];
-    const hubHostname = window.location.hostname.split('.').slice(1).join('.');
-    return `https://api.${hubHostname}/data/${ledgerId}/`;
-  } else {
-    return undefined;
-  }
-};
+const hubBaseURL = (): string | undefined => { return `${window.location.origin}/` };
 
 const hubWsURL = (): string | undefined => {
   const domainType = detectAppDomainType();
-  if (domainType === DomainType.APP_DOMAIN || domainType === DomainType.NON_HUB_DOMAIN) {
-    return `wss://${window.location.hostname}/`;
-  } else if (detectAppDomainType() === DomainType.LEGACY_DOMAIN) {
-    const ledgerId = window.location.hostname.split('.')[0];
-    const hubHostname = window.location.hostname.split('.').slice(1).join('.');
-    return `wss://api.${hubHostname}/data/${ledgerId}/`;
-  } else {
-    return undefined;
-  }
+  return domainType === DomainType.APP_DOMAIN || domainType === DomainType.NON_HUB_DOMAIN
+    ? `wss://${window.location.hostname}/`
+    : undefined;
 };
 
 /**
