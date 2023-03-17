@@ -12,6 +12,7 @@ import {
 /** ======================== List Public Automations ======================== */
 
 export const listPublishedAutomations = async (publicToken: string): Promise<Automation[]> => {
+  console.log("HELP ME PLEASEEEE");
   const headers = {
     Authorization: `Bearer ${publicToken}`,
     'Content-Type': 'application/json',
