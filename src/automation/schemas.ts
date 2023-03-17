@@ -82,7 +82,7 @@ const integrationTypeFieldInfoDecoder: Decoder<IntegrationTypeFieldInfo> = objec
 type Integration = AutomationEntity<
   EntityTag.Integration,
   {
-    artifactHash?: string;
+    artifactHash?: string | null;
     typeName: string;
     description: string;
     entrypoint: string;
@@ -95,11 +95,13 @@ type Integration = AutomationEntity<
   }
 >;
 
+const nullable = <T>(decoder: Decoder<T>): Decoder<T | null> => union(decoder, constant(null));
+
 const integrationDecoder: Decoder<Integration> = object({
   tag: constant(EntityTag.Integration),
   value: object({
     entityName: string(),
-    artifactHash: optional(string()),
+    artifactHash: optional(nullable(string())),
     typeName: string(),
     description: string(),
     entrypoint: string(),

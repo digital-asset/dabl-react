@@ -1,7 +1,6 @@
 import { array, boolean, Decoder, number, object, string } from '@mojotech/json-type-validation';
 
 import log from '../log';
-import { detectAppDomainType, DomainType } from '../utils';
 
 const PUBLIC_DISPLAY_NAME = 'Public';
 const USER_ADMIN_DISPLAY_NAME = 'UserAdmin';
