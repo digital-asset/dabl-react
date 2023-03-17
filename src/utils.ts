@@ -46,14 +46,19 @@ export const damlHubEnvironment = ():
   return isRunningOnHub() ? { hostname, baseURL, wsURL, ledgerId } : undefined;
 };
 
-const hubBaseURL = (): string | undefined => { return `${window.location.origin}/` };
+const hubBaseURL = (): string | undefined => {
+  const domainType = detectAppDomainType();
+  return domainType === DomainType.APP_DOMAIN || domainType === DomainType.NON_HUB_DOMAIN
+    ? `${window.location.origin}/`
+    : undefined;
+};
 
-const hubWsURL = (): string | undefined => { return `wss://${window.location.hostname}/` };
-//   const domainType = detectAppDomainType();
-//   return domainType === DomainType.APP_DOMAIN || domainType === DomainType.NON_HUB_DOMAIN
-//     ?
-//     : undefined;
-// };
+const hubWsURL = (): string | undefined => {
+  const domainType = detectAppDomainType();
+  return domainType === DomainType.APP_DOMAIN || domainType === DomainType.NON_HUB_DOMAIN
+    ? `wss://${window.location.hostname}/`
+    : undefined;
+};
 
 /**
  * Determine if the app is running on Daml Hub via domain detection

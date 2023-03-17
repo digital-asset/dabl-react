@@ -33,8 +33,6 @@ type DamlTrigger = AutomationEntity<
   }
 >;
 
-const nullable = <T>(decoder: Decoder<T>): Decoder<T | null> => union(decoder, constant(null));
-
 const damlTriggerDecoder: Decoder<DamlTrigger> = object({
   tag: constant(EntityTag.DamlTrigger),
   value: object({
@@ -62,11 +60,11 @@ interface IntegrationTypeFieldInfo {
   name: string;
   description: string;
   fieldType: string;
-  helpUrl?: string | null;
-  defaultValue?: string | null;
-  required?: boolean | null;
+  helpUrl?: string;
+  defaultValue?: string;
+  required?: boolean;
   tags: string[];
-  fieldContext?: string | null;
+  fieldContext?: string;
 }
 
 const integrationTypeFieldInfoDecoder: Decoder<IntegrationTypeFieldInfo> = object({
@@ -74,43 +72,42 @@ const integrationTypeFieldInfoDecoder: Decoder<IntegrationTypeFieldInfo> = objec
   name: string(),
   description: string(),
   fieldType: string(),
-  helpUrl: optional(nullable(string())),
-  defaultValue: optional(nullable(string())),
-  required: optional(nullable(boolean())),
+  helpUrl: optional(string()),
+  defaultValue: optional(string()),
+  required: optional(boolean()),
   tags: array(string()),
-  fieldContext: optional(nullable(string())),
+  fieldContext: optional(string()),
 });
 
 type Integration = AutomationEntity<
   EntityTag.Integration,
   {
-    artifactHash?: string | null;
+    artifactHash?: string;
     typeName: string;
     description: string;
     entrypoint: string;
-    runtime?: string | null;
-    envClass?: string | null;
+    runtime?: string;
+    envClass?: string;
     fields: IntegrationTypeFieldInfo[];
-    helpUrl?: string | null;
-    instanceTemplate?: string | null;
+    helpUrl?: string;
+    instanceTemplate?: string;
     tags: string[];
   }
 >;
-
 
 const integrationDecoder: Decoder<Integration> = object({
   tag: constant(EntityTag.Integration),
   value: object({
     entityName: string(),
-    artifactHash: optional(nullable(string())),
+    artifactHash: optional(string()),
     typeName: string(),
     description: string(),
     entrypoint: string(),
-    runtime: optional(nullable(string())),
-    envClass: optional(nullable(string())),
+    runtime: optional(string()),
+    envClass: optional(string()),
     fields: array(integrationTypeFieldInfoDecoder),
-    helpUrl: optional(nullable(string())),
-    instanceTemplate: optional(nullable(string())),
+    helpUrl: optional(string()),
+    instanceTemplate: optional(string()),
     tags: array(string()),
   }),
 });
