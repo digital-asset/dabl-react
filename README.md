@@ -221,3 +221,12 @@ let needToResetLogin = token.isExpired;
 // The original JWT string
 let jwt = token.token;
 ```
+
+## Build
+
+### Releases
+
+To cut a release:
+
+1. Bump the version in `package.json`, and merge that to `main`
+2. Create a GitHub release. The presence of the tag will trigger a CircleCI run that deploys to npm.
