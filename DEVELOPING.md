@@ -4,18 +4,18 @@ The following guide will demonstrate how to develop changes to the `@daml/hub-re
 
 ## Assumptions:
 
-* A local copy of `@daml/hub-react`
-* A local copy of a Daml application with a UI that imports the library
-* A directory structure like:
-  * `dabl-react/`
-    * `lib/`
-    * `src/`
-    * `package.json`
-  * `my-daml-app/`
-    * `ui/`
-    * `package.json`
-    * `node_modules/`
-      * `react/`
+- A local copy of `@daml/hub-react`
+- A local copy of a Daml application with a UI that imports the library
+- A directory structure like:
+  - `dabl-react/`
+    - `lib/`
+    - `src/`
+    - `package.json`
+  - `my-daml-app/`
+    - `ui/`
+    - `package.json`
+    - `node_modules/`
+      - `react/`
 
 ## Configuring a react link
 
