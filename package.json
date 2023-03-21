@@ -1,6 +1,6 @@
 {
   "name": "@daml/hub-react",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Daml React functions for Daml Hub",
   "homepage": "https://hub.daml.com",
   "keywords": [
@@ -32,22 +32,23 @@
   "devDependencies": {
     "@testing-library/react-hooks": "^5.0.3",
     "@trivago/prettier-plugin-sort-imports": "^2.0.4",
-    "@types/jest": "^24.0.23",
+    "@types/jest": "^29.5.0",
     "@types/jsonwebtoken": "^8.5.0",
-    "@types/node": "^14.0.14",
+    "@types/node": "^18.15.3",
     "@types/react": "^16.9.20",
-    "@typescript-eslint/eslint-plugin": "^2.16.0",
-    "@typescript-eslint/parser": "^2.16.0",
-    "eslint": "^6.8.0",
-    "jest": "^26.1.0",
+    "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@typescript-eslint/parser": "^5.55.0",
+    "eslint": "^8.36.0",
+    "jest": "^29.5.0",
+    "jest-environment-jsdom": "^29.5.0",
     "jest-fetch-mock": "^3.0.3",
-    "jsonwebtoken": "^8.5.1",
-    "prettier": "^2.3.2",
+    "jsonwebtoken": "^9.0.0",
+    "prettier": "^2.8.4",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-test-renderer": "^16.12.0",
-    "ts-jest": "^26.1.1",
-    "typescript": "~3.8.3"
+    "ts-jest": "^29.0.5",
+    "typescript": "^5.0.2"
   },
   "peerDependencies": {
     "react": "^16.12.0 || ^17.0.0",
@@ -57,6 +58,7 @@
     "@types/react": "^16.9.20"
   },
   "jest": {
+    "testEnvironment": "jsdom",
     "testMatch": [
       "**/__tests__/**/*.+(ts|tsx|js)",
       "**/?(*.)+(spec|test).+(ts|tsx|js)"
