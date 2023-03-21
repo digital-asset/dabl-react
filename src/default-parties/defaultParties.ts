@@ -1,7 +1,6 @@
 import { array, boolean, Decoder, number, object, string } from '@mojotech/json-type-validation';
 
 import log from '../log';
-import { detectAppDomainType, DomainType } from '../utils';
 
 const PUBLIC_DISPLAY_NAME = 'Public';
 const USER_ADMIN_DISPLAY_NAME = 'UserAdmin';
@@ -37,18 +36,13 @@ function getPartyIdByName(list: PartyDetails[], displayName: string): string | u
 export async function fetchDefaultParties(): Promise<DefaultParties> {
   try {
     const { hostname: hn } = window.location;
-    switch (detectAppDomainType()) {
-      case DomainType.APP_DOMAIN:
-        const app_response = await fetch(`//${hn}/.hub/v1/default-parties`);
-        const app_json = await app_response.json();
-        const app_parties = appAPIDecoder.runWithException(app_json);
-        return [
-          getPartyIdByName(app_parties.result, PUBLIC_DISPLAY_NAME),
-          getPartyIdByName(app_parties.result, USER_ADMIN_DISPLAY_NAME),
-        ];
-      default:
-        throw new Error('App not running on Daml Hub');
-    }
+    const app_response = await fetch(`//${hn}/.hub/v1/default-parties`);
+    const app_json = await app_response.json();
+    const app_parties = appAPIDecoder.runWithException(app_json);
+    return [
+      getPartyIdByName(app_parties.result, PUBLIC_DISPLAY_NAME),
+      getPartyIdByName(app_parties.result, USER_ADMIN_DISPLAY_NAME),
+    ];
   } catch (error) {
     log('default-parties').error(`Error determining well known parties ${JSON.stringify(error)}`);
     throw error;
