@@ -14,7 +14,7 @@ export const detectAppDomainType = (): DomainType => {
   if (hn.includes('daml') && hn.includes('.app')) {
     log('domain').debug('App running on daml.app domain');
     return DomainType.APP_DOMAIN;
-  } else if (hn.includes('localhost')) {
+  } else if (hn.includes('localhost') || /^127(\.\d{1,3}){3}$/.exec(hn)) {
     log('domain').debug('App running on localhost');
     return DomainType.LOCALHOST;
   } else {
