@@ -19,12 +19,13 @@ interface DamlHubCtx {
 interface DamlHubProps {
   token?: PartyToken | string; // Not all APIs require a token
   interval?: number;
+  nonHubDomain?: boolean;
 }
 
 // This empty default context value does not escape outside of the provider.
 const DamlHubContext = createContext<DamlHubCtx | undefined>(undefined);
 
-export const DamlHub: React.FC<DamlHubProps> = ({ children, token, interval: _i }) => {
+export const DamlHub: React.FC<DamlHubProps> = ({ children, token, interval: _i, nonHubDomain = false }) => {
   const [partyToken, setPartyToken] = React.useState<PartyToken>();
   const [publicToken, setPublicToken] = React.useState<PartyToken>();
   const [publicParty, setPublicParty] = React.useState<string>();
@@ -32,7 +33,7 @@ export const DamlHub: React.FC<DamlHubProps> = ({ children, token, interval: _i 
   const interval = _i || DEFAULT_POLL_INTERVAL;
 
   React.useEffect(() => {
-    if (token && !partyToken && isRunningOnHub()) {
+    if (token && !partyToken && isRunningOnHub(nonHubDomain)) {
       const partyToken: PartyToken = typeof token === 'string' ? new PartyToken(token) : token;
       setPartyToken(partyToken);
     }
@@ -45,7 +46,7 @@ export const DamlHub: React.FC<DamlHubProps> = ({ children, token, interval: _i 
       pt && setPublicToken(new PartyToken(pt));
     }
   }, [publicToken, setPublicToken]);
-  usePolling(pollPublicToken, interval);
+  usePolling(pollPublicToken, interval, nonHubDomain);
 
   const pollDefaultParties = React.useCallback(async () => {
     // No need to keep polling default parties after both have been found.
@@ -56,7 +57,7 @@ export const DamlHub: React.FC<DamlHubProps> = ({ children, token, interval: _i 
       !userAdminParty && setUserAdminParty(ua);
     }
   }, [publicParty, userAdminParty, setPublicParty, setUserAdminParty]);
-  usePolling(pollDefaultParties, interval);
+  usePolling(pollDefaultParties, interval, nonHubDomain);
 
   return (
     <DamlHubContext.Provider

@@ -28,9 +28,12 @@ export const detectAppDomainType = (): DomainType => {
  * the library is running against. Includes hostname,
  * baseURL, wsURL, and a ledgerId (if discoverable).
  *
+ * Set 'nonHubDomain' to true if running your app on a hub ledger with a
+ * ledger not provided by Daml Hub.
+ *
  * Returns undefined if not running on Hub
  */
-export const damlHubEnvironment = ():
+export const damlHubEnvironment = (nonHubDomain: boolean = false):
   | {
       hostname: string;
       baseURL: string | undefined;
@@ -43,7 +46,7 @@ export const damlHubEnvironment = ():
   const baseURL = hubBaseURL();
   const wsURL = hubWsURL();
 
-  return isRunningOnHub() ? { hostname, baseURL, wsURL, ledgerId } : undefined;
+  return isRunningOnHub(nonHubDomain) ? { hostname, baseURL, wsURL, ledgerId } : undefined;
 };
 
 const hubBaseURL = (): string | undefined => {
@@ -61,11 +64,13 @@ const hubWsURL = (): string | undefined => {
 };
 
 /**
- * Determine if the app is running on Daml Hub via domain detection
+ * Determine if the app is running on Daml Hub via domain detection. Set 'nonHubDomain' to
+ * true if running your app on a hub ledger with a ledger not provided by Daml Hub
  * @returns boolean
  */
-export const isRunningOnHub = (): boolean => {
-  return detectAppDomainType() !== DomainType.LOCALHOST;
+export const isRunningOnHub = (nonHubDomain: boolean = false): boolean => {
+  const domainType = detectAppDomainType();
+  return nonHubDomain ? domainType !== DomainType.LOCALHOST : domainType === DomainType.APP_DOMAIN;
 };
 
 export const deleteCookie = (name: string, domain?: string): void => {
@@ -99,9 +104,9 @@ export const asyncFileReader = (file: File): Promise<string> => {
   });
 };
 
-export const usePolling = (fn: () => Promise<void>, interval: number) => {
+export const usePolling = (fn: () => Promise<void>, interval: number, nonHubDomain: boolean = false) => {
   React.useEffect(() => {
-    if (!isRunningOnHub()) {
+    if (!isRunningOnHub(nonHubDomain)) {
       log('polling').debug('Disabling polling, app is not running on Daml Hub');
       return () => {};
     } else if (interval > 0) {
