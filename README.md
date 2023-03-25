@@ -220,14 +220,16 @@ let needToResetLogin = token.isExpired;
 
 // The original JWT string
 let jwt = token.token;
-
 ```
 
 ### Using hub-react with a custom domain
 
 If you are using this library with a domain that is not provided to you by Daml Hub, you must set `nonHubDomain` to `true` in the `DamlHub` context:
+
 ```tsx
-<DamlHub token='...' nonHubDomain>{/ ... /}</DamlHub>
+<DamlHub token="..." nonHubDomain>
+  {/ ... /}
+</DamlHub>
 ```
 
 You must also indicate this by passing `true` into `isRunningOnHub` if calling it directly.

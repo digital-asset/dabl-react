@@ -25,7 +25,12 @@ interface DamlHubProps {
 // This empty default context value does not escape outside of the provider.
 const DamlHubContext = createContext<DamlHubCtx | undefined>(undefined);
 
-export const DamlHub: React.FC<DamlHubProps> = ({ children, token, interval: _i, nonHubDomain = false }) => {
+export const DamlHub: React.FC<DamlHubProps> = ({
+  children,
+  token,
+  interval: _i,
+  nonHubDomain = false,
+}) => {
   const [partyToken, setPartyToken] = React.useState<PartyToken>();
   const [publicToken, setPublicToken] = React.useState<PartyToken>();
   const [publicParty, setPublicParty] = React.useState<string>();

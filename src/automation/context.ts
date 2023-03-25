@@ -35,7 +35,7 @@ export const AutomationsProvider: React.FC<AutomationsProviderProps> = ({
   partyToken,
   publicToken,
   interval,
-  nonHubDomain = false
+  nonHubDomain = false,
 }) => {
   const [automations, setAutomations] = React.useState<Automation[]>();
   const [instances, setInstances] = React.useState<Instance[]>();

@@ -33,7 +33,9 @@ export const detectAppDomainType = (): DomainType => {
  *
  * Returns undefined if not running on Hub
  */
-export const damlHubEnvironment = (nonHubDomain: boolean = false):
+export const damlHubEnvironment = (
+  nonHubDomain: boolean = false
+):
   | {
       hostname: string;
       baseURL: string | undefined;
@@ -104,7 +106,11 @@ export const asyncFileReader = (file: File): Promise<string> => {
   });
 };
 
-export const usePolling = (fn: () => Promise<void>, interval: number, nonHubDomain: boolean = false) => {
+export const usePolling = (
+  fn: () => Promise<void>,
+  interval: number,
+  nonHubDomain: boolean = false
+) => {
   React.useEffect(() => {
     if (!isRunningOnHub(nonHubDomain)) {
       log('polling').debug('Disabling polling, app is not running on Daml Hub');
