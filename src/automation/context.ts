@@ -24,6 +24,7 @@ interface AutomationsProviderProps {
   publicToken?: PartyToken | string;
   partyToken?: PartyToken | string;
   interval: number;
+  nonHubDomain?: boolean;
 }
 
 // This empty default context value does not escape outside of the provider.
@@ -34,6 +35,7 @@ export const AutomationsProvider: React.FC<AutomationsProviderProps> = ({
   partyToken,
   publicToken,
   interval,
+  nonHubDomain = false,
 }) => {
   const [automations, setAutomations] = React.useState<Automation[]>();
   const [instances, setInstances] = React.useState<Instance[]>();
@@ -45,7 +47,7 @@ export const AutomationsProvider: React.FC<AutomationsProviderProps> = ({
       setAutomations(automations);
     }
   }, [publicToken, setAutomations]);
-  usePolling(pollAutomations, interval);
+  usePolling(pollAutomations, interval, nonHubDomain);
 
   const pollInstances = React.useCallback(async () => {
     // List running automation instances
@@ -54,7 +56,7 @@ export const AutomationsProvider: React.FC<AutomationsProviderProps> = ({
       setInstances(instances);
     }
   }, [partyToken, setInstances]);
-  usePolling(pollInstances, interval);
+  usePolling(pollInstances, interval, nonHubDomain);
 
   const undeployAutomationWrapper = !!partyToken
     ? async (artifactHash: string) => {
