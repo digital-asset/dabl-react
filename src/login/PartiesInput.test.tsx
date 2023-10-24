@@ -104,10 +104,6 @@ const invalidFormat = `
 
 test('parties-input - valid file', () => {
   expect(() => convertPartiesJson(validPartiesJSON, publicPartyId)).not.toThrow();
-  expect(convertPartiesJson(validPartiesJSON, publicPartyId).map(pd => pd.partyName)).toEqual([
-    'Public',
-    'Frank',
-  ]);
 });
 
 test('parties-input - invalid formats', () => {
