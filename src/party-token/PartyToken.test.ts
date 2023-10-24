@@ -8,28 +8,9 @@ const expiresIn = new Date().getTime() / 1000 + 24 * 60 * 60;
 
 const validToken = {
   exp: expiresIn,
-  'https://daml.com/ledger-api': {
-    applicationId: 'damlhub',
-    ledgerId: 'ledger-abc',
-    actAs: ['ledger-party-abcd'],
-    readAs: [],
-  },
-  ledgerId: 'ledger-abc',
-  owner: 'user-grant-1111',
-  party: 'ledger-party-abcd',
-  partyName: 'Frank',
 };
 
-const invalidToken1 = 'notevenjson!';
-const invalidToken2 = {
-  exp: expiresIn,
-  'https://daml.com/ledger-api': {
-    applicationId: 'damlhub',
-    ledgerId: 'ledger-abc',
-    actAs: ['ledger-party-abcd'],
-    readAs: [],
-  },
-};
+const invalidToken = 'notevenjson!';
 
 function newPartyToken(token: object | string): PartyToken {
   if (typeof token === 'string') {
@@ -44,8 +25,7 @@ test('access-token - valid', () => {
 });
 
 test('access-token - invalid', () => {
-  expect(() => newPartyToken(invalidToken1)).toThrowError('Access token not in Daml Hub format');
-  expect(() => newPartyToken(invalidToken2)).toThrowError('Access token not in Daml Hub format');
+  expect(() => newPartyToken(invalidToken)).toThrowError('Access token not in Daml Hub format');
 });
 
 test('access-token - payload', () => {
@@ -55,9 +35,6 @@ test('access-token - payload', () => {
 test('access-token - getters', () => {
   const token = newPartyToken(validToken);
 
-  expect(token.party).toBe('ledger-party-abcd');
-  expect(token.partyName).toBe('Frank');
-  expect(token.ledgerId).toBe('ledger-abc');
   expect(token.isExpired).toBe(false);
 });
 
@@ -65,9 +42,6 @@ test('access-token - missing getters', () => {
   let token = newPartyToken(validToken);
   delete token.payload;
 
-  expect(() => token.party).toThrowError('Party identifier not found in token');
-  expect(() => token.partyName).toThrowError('Party name not found in token');
-  expect(() => token.ledgerId).toThrowError('Ledger identifier not found in token');
   expect(token.isExpired).toBe(true);
 });
 
